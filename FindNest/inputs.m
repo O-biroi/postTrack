@@ -1,13 +1,14 @@
 clear all
 
 %% Files configurations
-parameters.folderPath ='/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/cam5'; %Mac
+% parameters.folderPath ='/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/cam5'; % Macbook Pro Zimai
+parameters.folderPath ='/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/cam5'; % iMac Office
 %parameters.folderPath = 'C:\Users\galciato\polybox\Laptop\Age_Analysis\DeadPruned'; %Windows
-parameters.numOfFiles = 6;
-parameters.firstFile = 1;
+parameters.numOfFiles = 4; % the last file 
+parameters.firstFile = 1;   
 parameters.numOfAnts = 8;
-parameters.lastframe = 864000;
-parameters.segment = 6000*24; % number of frames in one "day"
+parameters.lastframe = 864000; % the last frame to be included in the analysis
+parameters.segment = 6000*24*6; % number of frames in one "day"
 
 %% Define borders
 parameters.activeThresh = 1 - pi/4; % prencentile: higher - narrower arena
