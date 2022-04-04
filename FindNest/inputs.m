@@ -6,6 +6,7 @@ parameters.folderPath ='/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/Do
 parameters.numOfFiles = 6;
 parameters.firstFile = 1;
 parameters.numOfAnts = 8;
+parameters.lastframe = 864000;
 parameters.segment = 6000*24; % number of frames in one "day"
 
 %% Define borders
