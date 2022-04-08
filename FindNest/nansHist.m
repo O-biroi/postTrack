@@ -55,7 +55,7 @@ for i = 1:size(xy,1)        %loop all colonies
         histPosNansTemp2 = histcounts2(posEndNan(:, 2), posEndNan(:, 1), edges{i,day}(1, :), edges{i,day}(2, :));
         histPosNans{i,day}(in, :, :) = histPosNansTemp1 + histPosNansTemp2;
         % Remove unactive areas
-        histPosNans{i,day}(in, activeArea{i} == 0) = nan;
+%         histPosNans{i,day}(in, activeArea{i} == 0) = nan;
         
         %clear beginNans beginNansTemp endNans endNansTemp histPosNansTemp1 histPosNansTemp2 nanDurations posBeginNan posEndNan
     end

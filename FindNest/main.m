@@ -3,10 +3,10 @@ inputs
 
 %% Load files
 %%Need to change this to keep also ant_info
-[xy, names] = loadFiles(parameters.folderPath, parameters.firstFile, parameters.numOfFiles, parameters.segment, parameters.lastframe);
+[xy, names] = loadFiles(parameters.folderPath, parameters.firstFile, parameters.numOfFiles, parameters.segment);
 
 %% Spatial distribution
-[histograms.spatialHist, bins.edges, bins.size, activeArea] = spatialHistCalc(xy, parameters.numOfBinsHist, parameters.activeThresh);
+[histograms.spatialHist, bins.edges, bins.size, activeArea] = spatialHistCalc(xy, parameters.numOfBinsHist, parameters.activeThresh, parameters.arenaSize);
 
 %% Calculate movement
 % [speeds, histograms.standHist, histograms.runHist] = standRunCalc(xy, bins.edges, parameters.numOfBinsHist, parameters.speedThresh, activeArea);
