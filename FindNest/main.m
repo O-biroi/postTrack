@@ -3,7 +3,7 @@ inputs
 
 %% Load files
 %%Need to change this to keep also ant_info
-[xy, names] = loadFiles(parameters.folderPath, parameters.firstFile, parameters.numOfFiles, parameters.segment);
+[xy, names] = loadFiles(parameters.folderPath, parameters.firstFile, parameters.numOfFiles, parameters.segment, parameters.lastframe);
 
 %% Spatial distribution
 [histograms.spatialHist, bins.edges, bins.size, activeArea] = spatialHistCalc(xy, parameters.numOfBinsHist, parameters.activeThresh, parameters.arenaSize);
