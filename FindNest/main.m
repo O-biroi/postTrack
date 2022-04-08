@@ -16,7 +16,6 @@ nestBoundaries = nestBoundariesCalc2(xy, nestArea, bins.edges, bins.size);
 %Save nests
 % save(fullfile(parameters.ExpDir,strcat('nestAreas',datestr(now, '_yy_mm_dd_HH_MM'))),'nestArea', 'nestBoundaries', 'bins', 'parameters','-v7.3');
 
-
 %% Missing data
 [histograms.nansHist, beginNansInd, endNansInd] = nansHist(xy, activeArea, bins.edges, parameters.numOfAnts);
 [xy2, counter, nansToStart, nansRemoved] = dealWithNans4(xy, beginNansInd, endNansInd, nestBoundaries, parameters.DurationThresh);
