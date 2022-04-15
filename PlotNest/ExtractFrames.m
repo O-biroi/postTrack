@@ -1,4 +1,4 @@
-videos=[1:10:121];                  %Identities of videos to extract from (here one every 10)
+videos=[1:10:238];                  %Identities of videos to extract from (here one every 10)
 days=[3,3,4,4,5,5,5,6,6,7,7,7,8];   %not necessarily "day" but whatever time window you used to create different nests
 camdir=uigetdir;                    %select camera folder
 [~,camname,~]=fileparts(camdir);    %extract name camera
@@ -9,7 +9,7 @@ maskdir=dir(fullfile(camdir,'antrax','parameters','masks','colony_C*.png')); %Lo
 %correctly the Petri dish, but there are other ways to do this (see Daniel
 %code)
 
-viddir=dir(fullfile(camdir,'videos','*','*.avi'));  %List all videos in the camera
+viddir=dir(fullfile(camdir,'videos','*','*.mp4'));  %List all videos in the camera
 viddir = viddir(~startsWith({viddir.name}, '.'));   %Eliminate temp files
 
 for i=1:size(viddir)                            %Extract colonies labels and video number
