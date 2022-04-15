@@ -3,12 +3,12 @@ clear all
 %% Files configurations
 %parameters.folderPath ='/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all'; % Macbook Pro Zimai
 parameters.folderPath ='/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all'; % iMac Office
-parameters.numOfFiles = 20; % the last file 
-parameters.firstFile = 1;   
+parameters.numOfFiles = 13; % the last file 
+parameters.firstFile = 13;   
 parameters.numOfAnts = 8;
 parameters.arenaSize = 0.05; % size of circular arena (in meters)
 parameters.lastframe = 864000; % the last frame to be included in the analysis
-parameters.segment = 6000*6; % number of frames in one "day"
+parameters.segment = 6000*; % number of frames in one "day"
 
 %% Define borders
 parameters.activeThresh = 1 - pi/4; % prencentile: higher - narrower arena
