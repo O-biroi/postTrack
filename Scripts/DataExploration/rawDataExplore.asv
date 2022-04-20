@@ -18,7 +18,7 @@ output.ColonyID = append(splitNames(:, 2),"_", splitNames(:, 3));
 
 % data filtering
 maxNumAnts = 8; % maximum number of ants in one colony
-treatRm = "X"; % treatment to remove
+treatRm = "None"; % treatment to remove
 frameKeep = 864000; % frame to keep
 
 % ant information
@@ -74,21 +74,28 @@ outputFiltered
 
 % produce ant table
 antOutputTemp = table2array(outputFiltered(:,5));
-antOutput = vertcat(antTableTemp{:});
+antOutput = vertcat(antOutputTemp{:});
 
 %% Statistics
 % make box chart
 boxchart(categorical(outputFiltered.Treatment), outputFiltered.InNestRatioMean)
 
 % linear mix model, colony as random factor
-boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio)
+b = boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio, 'Notch','on');
+hold on;
+scatter(categorical(antOutput.Treatment), antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
+hold off;
 lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
-
 
 %% Plot the trajectory of each ant in every colony
 
 figure;
-for i = 1:numFile
+x0=10;
+y0=10;
+width=550;
+height=400
+set(gcf,'position',[x0,y0,width,height])
+for i = 1:10
      xyMatrix = load(fullfile(xyDir, outputFiltered.Filename(i))).xy(1:frameKeep,:); % load xy matrix
      numAnts = size(xyMatrix, 2)/2; % number of ants equals to number of columns
      xlim_min = min(min(xyMatrix(:,1:2:2*numAnts-1))); % set x and y axis lim
@@ -96,12 +103,15 @@ for i = 1:numFile
      ylim_min = min(min(xyMatrix(:,2:2:2*numAnts)));
      ylim_max = max(max(xyMatrix(:,2:2:2*numAnts)));
      for j = 1:numAnts
-        subplot(numFile,maxNumAnts, (i-1)*maxNumAnts+j); % make numFile*maxNumAnts grid plot
-        axis ij;
+        subplot(10,maxNumAnts, (i-1)*maxNumAnts+j); % make numFile*maxNumAnts grid plot
         x= xyMatrix(:,2*j-1);
         y = xyMatrix(:,2*j);
         % assignment rate
-        scatter(x, y, 0.5, 'filled');
+        if outputFiltered.AntOutput{i,1}(j,"AssignmentRate") < 0.7
+            scatter(x, y, 0.5, 'filled');
+        else
+            scatter(x, y, 0.5, 'filled');
+        axis ij;
         xlim([xlim_min,xlim_max]);
         ylim([ylim_min,ylim_max]);
      end
