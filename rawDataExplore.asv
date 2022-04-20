@@ -18,7 +18,7 @@ output.ColonyID = append(splitNames(:, 2),"_", splitNames(:, 3));
 
 % data filtering
 maxNumAnts = 8; % maximum number of ants in one colony
-treatRm = "None"; % treatment to remove
+treatRm = "X"; % treatment to remove
 frameKeep = 864000; % frame to keep
 
 % ant information
@@ -74,18 +74,16 @@ outputFiltered
 
 % produce ant table
 antOutputTemp = table2array(outputFiltered(:,5));
-antOutput = vertcat(antOutputTemp{:});
+antOutput = vertcat(antTableTemp{:});
 
 %% Statistics
 % make box chart
 boxchart(categorical(outputFiltered.Treatment), outputFiltered.InNestRatioMean)
 
 % linear mix model, colony as random factor
-b = boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio, 'Notch','on');
-hold on;
-scatter(categorical(antOutput.Treatment), antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
-hold off;
+boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio)
 lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
+
 
 %% Plot the trajectory of each ant in every colony
 

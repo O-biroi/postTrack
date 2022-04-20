@@ -1,12 +1,11 @@
-clear all
 
 %% Files configurations
-parameters.folderPath ='/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/cam2'; %Mac
+parameters.folderPath ='/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all'; %Mac
 %parameters.folderPath = 'C:\Users\galciato\polybox\Laptop\Age_Analysis\DeadPruned'; %Windows
-parameters.numOfFiles = 4;
+parameters.numOfFiles = 30;
 parameters.firstFile = 1;
 parameters.numOfAnts = 8;
-parameters.segment = 6000 * 24; % number of frames in one "day"
+parameters.segment = 6000 * 3; % number of frames in one "day"
 parameters.arenaSize = 0.05; % size of circular arena (in meters)
 parameters.lastframe = 864000;
 
