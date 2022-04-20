@@ -15,7 +15,7 @@ for i = 1:size(xy,1)
                 nestBoundaries{i,day}{ind}(1, :), nestBoundaries{i,day}{ind}(2, :));
             
         end
-        inNestTemp = squeeze(sum(inNestTemp(:,:,:), 3));
+        inNestTemp = squeeze(suminNestTemp(:,:,:), 3)
         inNest{i,day}(:, in) = sum(inNestTemp, 2) > 0;
         clear xyTemp inNestTemp
     end
