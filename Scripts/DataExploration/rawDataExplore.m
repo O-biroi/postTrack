@@ -13,8 +13,8 @@ xyFilename = string((sort({xyFileinfo.name}))');
 % create output matrix with experiment information in the xy file names
 output = table(xyFilename,'VariableNames',{'Filename'});
 splitNames = split(output.Filename, ["_","."]);
-output.Treatment = splitNames(:, 2);
-output.ColonyID = append(splitNames(:, 2),"_", splitNames(:, 3));
+output.Treatment = categorical(splitNames(:, 2));
+output.ColonyID = categorical(append(splitNames(:, 2),"_", splitNames(:, 3)));
 
 % data filtering
 maxNumAnts = 8; % maximum number of ants in one colony
@@ -22,12 +22,15 @@ treatRm = "None"; % treatment to remove
 frameKeep = 864000; % frame to keep
 
 % ant information
-antColour = ["BB","BG","BR","GG","GR","RB","RG","GG"]'; % colour code: sequence has to be matched with column sequence in the xy matrix
+antColour = categorical(["BB","BG","BR","GG","GR","RB","RG","RR"]'); % colour code: sequence has to be matched with column sequence in the xy matrix
 antTable = table(antColour, 'VariableNames',{'Colour'}); % create empty ant table for data storage of ants in each colony 
 
 % run find nest code
 inNestWithNansRaw = copyNans(xy, inNest);
 inNestWithNans = inNestWithNansRaw(:,1);
+
+% load infection status
+loadInfectionStatus;
 
 %% Clean Data
 
@@ -70,19 +73,29 @@ for i = 1:numFile
    outputFiltered.InNestRatioGlobal(i) = sum(inNestWithNans{i,1}, "all", "omitnan")/(length(inNestWithNans{i,1})*numAnts - sum(sum(isnan(inNestWithNans{i,1}))));
 end
 
-outputFiltered
+outputFiltered;
 
 % produce ant table
 antOutputTemp = table2array(outputFiltered(:,5));
-antOutput = vertcat(antOutputTemp{:});
+antOutputTemp2 = vertcat(antOutputTemp{:});
+
+% join ant table with infection status table
+antOutput = join(antOutputTemp2, antInfectionStatus, "Keys",["ColonyID","Colour"]);
+antOutput.ColonyTreatmentAntInfectionStatus = strcat(string(antOutput.Treatment), "_",string(antOutput.InfectionStatus));
+
 
 %% Statistics
 % make box chart
-boxchart(categorical(outputFiltered.Treatment), outputFiltered.InNestRatioMean)
+boxchart(outputFiltered.Treatment, outputFiltered.InNestRatioMean)
 
 % linear mix model, colony as random factor
-b = boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio, 'Notch','on');
+b = boxchart(antOutput.Treatment, antOutput.InNestRatio, 'Notch','on');
 hold on;
-scatter(categorical(antOutput.Treatment), antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
+scatter(antOutput.Treatment, antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
 hold off;
+
+
 lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
+
+
+
