@@ -13,7 +13,7 @@ xyFilename = string((sort({xyFileinfo.name}))');
 % create output matrix with experiment information in the xy file names
 output = table(xyFilename,'VariableNames',{'Filename'});
 splitNames = split(output.Filename, ["_","."]);
-output.Treatment = splitNames(:, 2);
+output.Treatment = categorical(splitNames(:, 2));
 output.ColonyID = append(splitNames(:, 2),"_", splitNames(:, 3));
 
 % data filtering
@@ -78,12 +78,12 @@ antOutput = vertcat(antOutputTemp{:});
 
 %% Statistics
 % make box chart
-boxchart(categorical(outputFiltered.Treatment), outputFiltered.InNestRatioMean)
-
-% linear mix model, with colony as random factor
-b = boxchart(categorical(antOutput.Treatment), antOutput.InNestRatio, 'Notch','on');
+setColorMap;
+colormap(myColorMap);
+b = boxchart(antOutput.Treatment,  antOutput.InNestRatio, 'Notch', 'on','GroupByColor', antOutput.Treatment);
 hold on;
-scatter(categorical(antOutput.Treatment), antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
-hold off;
-lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
+scatter(antOutput, "Treatment", "InNestRatio", "ColorVariable","Treatment", 'jitter','on','jitterAmount',0.15)
+hold off; 
+% linear mix model, with colony as random factor
+lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)');
 
