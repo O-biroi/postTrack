@@ -35,6 +35,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                             infectedContacts = [infectedContacts; ...
                                 infectedContactsTemp];                      % add the newly infected ant's contact to the contact list
                             infectedContacts = sortrows(infectedContacts);  % sort the list in ascending order
+                            
                             clearvars infectedContactsTemp
                         end
                         index = index+1;
