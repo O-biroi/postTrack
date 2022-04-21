@@ -81,21 +81,28 @@ antOutputTemp2 = vertcat(antOutputTemp{:});
 
 % join ant table with infection status table
 antOutput = join(antOutputTemp2, antInfectionStatus, "Keys",["ColonyID","Colour"]);
-antOutput.ColonyTreatmentAntInfectionStatus = strcat(string(antOutput.Treatment), "_",string(antOutput.InfectionStatus));
+antOutput.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(antOutput.Treatment), "_",string(antOutput.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
 
 
 %% Statistics
-% make box chart
-boxchart(outputFiltered.Treatment, outputFiltered.InNestRatioMean)
+% make violin charts
+figure;
+violinplot(antOutput.InNestRatio, antOutput.Treatment);
+xticklabels({'Control','Treatment','Mix'});
+xlabel("Colony Treatment");
+ylabel("Ratio of time being in nest")
+
+% violin plot that separate ants with different infection status
+figure;
+violinplot(antOutput.InNestRatio, antOutput.ColonyTreatmentAntInfectionStatus);
+xticklabels({'Control - uninfected','Treatment - infected','Mix - Uninfected', 'Mix - infected'});
+xlabel("Colony Treatment");
+ylabel("Ratio of time being in nest")
+%boxchart(antOutput.ColonyTreatmentAntInfectionStatus, antOutput.InNestRatio,'Notch','on','GroupByColor', antOutput.Treatment);
+
 
 % linear mix model, colony as random factor
-b = boxchart(antOutput.Treatment, antOutput.InNestRatio, 'Notch','on');
-hold on;
-scatter(antOutput.Treatment, antOutput.InNestRatio, 'black', 'filled','jitter','on','jitterAmount',0.15);
-hold off;
-
-
-lme = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
+lme1 = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
 
 
 
