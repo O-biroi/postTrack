@@ -1,6 +1,5 @@
 function [distancesMat] = distancesClac(xy2, inNest, withNest)
     % withNest - either 1 or zero;
-
     %% prepare variables
     distancesMat = cell(size(xy2));                                         %   make an empty cell array
     for i = 1:1:size(xy2, 1)
@@ -8,16 +7,11 @@ function [distancesMat] = distancesClac(xy2, inNest, withNest)
             xyTemp = xy2{i, in};                                            %   take XY coordinates of the current experiment and colony
             xTemp = xyTemp(:, 1:2:end);                                     %   seperate Xs and Ys
             yTemp = xyTemp(:, 2:2:end);
-
-
             inNestTemp = inNest{i, in};                                     %   take the inNest values for the current experiment and colony
-
             xTemp(logical(inNestTemp)) = nan;
             yTemp(logical(inNestTemp)) = nan;
-
             inNestTemp(inNestTemp == 0) = nan;                              % make all not in nest ants nans - for later calculation
-
-        xSub = [];                                                          %   make empty variables
+            xSub = [];                                                      % make empty variables
             ySub = [];
             inNestSub = [];
 
@@ -31,9 +25,6 @@ function [distancesMat] = distancesClac(xy2, inNest, withNest)
                 xSub = [xSub, nan(size(xTemp, 1), ind-1), xTemp(:, 1:end-ind+1) - xTemp(:, ind:end)];
                 ySub = [ySub, nan(size(xTemp, 1), ind-1), yTemp(:, 1:end-ind+1) - yTemp(:, ind:end)];
                 inNestSub = [inNestSub, nan(size(xTemp, 1), ind-1), inNestTemp(:, 1:end-ind+1) - inNestTemp(:, ind:end)];
-
-                %             inNestSub = [inNestSub, nan(size(xTemp, 1), ind-1), inNestTemp(:, 1:end-ind+1) ./ inNestTemp(:, ind:end)];
-                %             inNestSub = [inNestSub, nan(size(xTemp, 1), ind-1), inNestTemp(:, 1:end-ind+1) ./ inNestTemp(:, ind:end)];      %   all in nest will be 0, all others will be nan
             end
 
             distancesMatTemp1 = sqrt(xSub.^2 + ySub.^2);                    %   elucidian distance
@@ -48,7 +39,8 @@ function [distancesMat] = distancesClac(xy2, inNest, withNest)
                 distancesMatTemp2(ind, 1:ind, :) = ...
                     fliplr(distancesMatTemp2(ind, 1:ind, :));               % delete the upper half of the matrix
             end
-            distancesMat{i, in} = distancesMatTemp2;
+
+            distancesMat{i, in} = distancesMatTemp2;                        % save distance mat
         end
     end
 end

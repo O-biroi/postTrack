@@ -31,3 +31,6 @@ for in = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.
     infections{i} = simTempNetwork(contactsPerAnt, in, parameters.entryPoints, parameters.numOfReps);
     toc
 end
+
+disp(['saving as: ' fullfile(parameters.outputFolderPath, parameters.fileName)])
+save(fullfile(parameters.outputFolderPath, parameters.fileName), "infections")
