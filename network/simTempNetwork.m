@@ -7,10 +7,10 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
     for i = 1:size(contactsPerAnt, 1)                                       % for each file
         for in = 1:size(contactsPerAnt, 2)                                  % for each segment
             for ind = 1:length(entryPoints)                                 % for each entry point
-                infectedAnts = entryPoints(ind);                            % add the entry point to the list of infected ants
-                infectedContacts = contactsPerAnt{i, in, infectedAnts};     % gather the contacts of the entry point ant
-                infectedContacts(:, 3) = infectedAnts;                      % add the infected ant to the third col
                 for inde = 1:numOfReps                                      % for each simulation replication
+                    infectedAnts = entryPoints(ind);                        % add the entry point to the list of infected ants
+                    infectedContacts = contactsPerAnt{i, in, infectedAnts}; % gather the contacts of the entry point ant
+                    infectedContacts(:, 3) = infectedAnts;                  % add the infected ant to the third col
                     infectionTimesTemp = 0;                                 % first infection is at 0 time for the entry point
                     infectingAntTemp = nan;                                 % first infection is not caused by another infecting ant - therfore nan
                     index = 1;                                              % start an index variable
@@ -35,7 +35,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                             infectedContacts = [infectedContacts; ...
                                 infectedContactsTemp];                      % add the newly infected ant's contact to the contact list
                             infectedContacts = sortrows(infectedContacts);  % sort the list in ascending order
-                            
+
                             clearvars infectedContactsTemp
                         end
                         index = index+1;
@@ -44,9 +44,8 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                     infections{i, in, ind, inde}.infectingAnts = ...
                         infectingAntTemp;
                     infections{i, in, ind, inde}.times = infectionTimesTemp;
+                    clearvars infectionTimesTemp infectingAntTemp infectedAnts index
                 end
-
-                clearvars infectionTimesTemp infectingAntTemp infectedAnts
             end
         end
     end
