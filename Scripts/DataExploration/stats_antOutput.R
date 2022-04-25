@@ -1,0 +1,25 @@
+library(tidyverse)
+library(EnvStats)
+library(lme4)
+library(lmerTest)
+library(DHARMa)
+library(car)
+library(multcomp)
+library(EnvStats)
+
+# load data
+antOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
+
+fit1 <- glmer(cbind(InNestFrame, OutNestFrame) ~ Treatment  + (1|ColonyID), data = antOutput, family = binomial())
+testDispersion(fit1)
+simulationOutput <- simulateResiduals(fittedModel = fit1, plot = F)
+plot(simulationOutput)
+Anova(fit1, type = "II")
+summary(fit1)
+
+fit2 <- glmer(OutNestRatio ~ Treatment  + (1|ColonyID), data = antOutput, weights = TotalFrame, family = binomial())
+testDispersion(fit2)
+simulationOutput <- simulateResiduals(fittedModel = fit2, plot = F)
+plot(simulationOutput)
+Anova(fit2, type = "II")
+summary(fit2)
