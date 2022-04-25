@@ -1,4 +1,4 @@
-function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints, numOfReps, outputFolderPath)
+function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints, numOfReps)
     numOfAnts = size(contactsPerAnt, 3);
     % entryPoints = linspace(1, numOfAnts, numOfAnts);
     % numOfReps = 10;
@@ -10,7 +10,6 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
     end
 
     for i = 1:size(contactsPerAnt, 1)                                       % for each file
-        tic
         for in = 1:size(contactsPerAnt, 2)                                  % for each segment
             for ind = 1:length(entryPoints)                                 % for each entry point
                 for inde = 1:numOfReps                                      % for each simulation replication
@@ -50,23 +49,15 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
 %                     infections{i, in, ind, inde}.infectingAnts = ...
 %                         infectingAntTemp;
 %                     infections{i, in, ind, inde}.times = infectionTimesTemp;
-                    infectionsTemp.infectedAnts = infectedAnts;                 % save the infection parameters
-                    infectionsTemp.infectingAnts = infectingAntTemp;
-                    infectionsTemp.times = infectionTimesTemp;
-                    fileNameTemp = ['infections_Prob' num2str(infectionProb) ...
-                        'File' num2str(i) ...
-                        'Seg' num2str(in) 'EP' num2str(ind) ...
-                        'Rep' num2str(inde) '.mat'];
-                    save(fullfile(outputFolderTempPath, fileNameTemp), ... 
-                        "infectionsTemp");
-                    clearvars infectionTimesTemp infectingAntTemp ...
-                        infectedAnts index infectionsTemp fileName
+                    infections.infectedAnts = infectedAnts;                 % save the infection parameters
+                    infections.infectingAnts = infectingAntTemp;
+                    infections.times = infectionTimesTemp;
+                    fileName = ['infections_File' num2str(i) 'Seg' num2str(index) 'EP' num2str(ind) 'Rep' num2str(inde).mat];
+                    save(fullfile(fileNameTemp, outputFolderTempPath). infectionsTemp);
+                    clearvars infectionTimesTemp infectingAntTemp infectedAnts index infections
                 end
             end
         end
-        disp (['finished simulations of file ' num2str(i) ...
-            'in P(infetct) = ' num2str(infectionProb)])
-        toc
     end
 end
 
