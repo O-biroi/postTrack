@@ -9,6 +9,7 @@ library(EnvStats)
 
 # load data
 antOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
+#ßantOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
 
 fit1 <- glmer(cbind(InNestFrame, OutNestFrame) ~ Treatment  + (1|ColonyID), data = antOutput, family = binomial())
 testDispersion(fit1)
