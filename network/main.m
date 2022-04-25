@@ -1,6 +1,6 @@
 clear all
 
-inputs3
+inputs
 
 disp('loadFilesGiacomo');
 tic
