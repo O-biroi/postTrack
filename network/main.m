@@ -1,10 +1,10 @@
 clear all
 
-inputs
+inputs2
 
 disp('loadFilesGiacomo');
 tic
-[xy, inNest] = loadFilesGiacomo(parameters.numOfFrames, parameters.numOfSegments, parameters.folderPath);
+[xy, inNest, parameters.numOfFiles] = loadFilesGiacomo(parameters.numOfFrames, parameters.numOfSegments, parameters.folderPath);
 toc
 
 disp('distancesClac');

@@ -1,15 +1,23 @@
-function infectionsVectors = generateVectors(parameters, infections)
-    segmentLength = parameters.numOfFrames/parameters.numOfSegments;
-
-    for i = 1:length(infections)                                            % for each infection probability
-        for in = 1:size(infections{i}, 1)                                   % for each file
-            for ind = 1:size(infections{i}, 2)                              % for each segment
-                for inde = 1:size(infections{i}, 3)                         % for each entry point
-                    for index = 1:size(infections{i}, 4)                    % for each replication
-                        relevantTimesTemp = ...                                 
-                            infections{i}{in, ind, inde, index}.times;      % extract the relevant infection times
-                        infectionsVectors{i}{in, ind, inde, index} = ...    % make the vector
-                            makeVector(relevantTimesTemp, segmentLength);
+function infectionsVectors = generateVectors(parameters)
+    segmentLength = parameters.numOfFrames;
+    iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
+i1 = 0;
+    for i = iterations                                                      % for each infection probability
+        i1 = i1+1;
+        for in = 1:parameters.numOfFiles                                    % for each file
+            for ind = 1:parameters.numOfSegments                            % for each segment
+                for inde = parameters.entryPoints                           % for each entry point
+                    for index = 1:parameters.numOfReps                      % for each replication
+                        fileName = (['infections_Prob' ...
+                            num2str(i) 'File' num2str(in) ...
+                            'Seg' num2str(ind) 'EP' ...
+                            num2str(inde) ...
+                            'Rep' num2str(index)]);
+                        load(fullfile(parameters.outputFolderPath, ...
+                            'temp', fileName), "infectionsTemp");       % load the relevant infection times                                     
+                        infectionsVectors(i1, in, ind, inde, index, :) = ... % make the vectors
+                            makeVector(infectionsTemp.times, ...
+                            segmentLength);
                     end
                 end
             end

@@ -3,17 +3,23 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
     % entryPoints = linspace(1, numOfAnts, numOfAnts);
     % numOfReps = 10;
     % infectionProb = 0.01;
-    
+
     outputFolderTempPath = fullfile(outputFolderPath, 'temp');
     if ~exist(outputFolderTempPath, 'dir')
         mkdir(outputFolderTempPath);
     end
 
-    for i = 1:size(contactsPerAnt, 1)                                       % for each file
+    parfor i = 1:size(contactsPerAnt, 1)                                       % for each file
         tic
         for in = 1:size(contactsPerAnt, 2)                                  % for each segment
             for ind = 1:length(entryPoints)                                 % for each entry point
-                for inde = 1:numOfReps                                      % for each simulation replication
+                for inde = 1:numOfReps                                   % for each simulation replication
+                    infectionsTemp = [];
+                    infectingAntTemp =[];
+                    infectedAnts = [];
+                    index = [];
+                    infectionsTemp = [];
+                    fileNameTemp = [];
                     infectedAnts = entryPoints(ind);                        % add the entry point to the list of infected ants
                     infectedContacts = contactsPerAnt{i, in, infectedAnts}; % gather the contacts of the entry point ant
                     infectedContacts(:, 3) = infectedAnts;                  % add the infected ant to the third col
@@ -42,14 +48,14 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                                 infectedContactsTemp];                      % add the newly infected ant's contact to the contact list
                             infectedContacts = sortrows(infectedContacts);  % sort the list in ascending order
 
-                            clearvars infectedContactsTemp
+                            infectedContactsTemp = [];
                         end
                         index = index+1;
                     end
-%                     infections{i, in, ind, inde}.infectedAnts = infectedAnts;   % save the infection parameters
-%                     infections{i, in, ind, inde}.infectingAnts = ...
-%                         infectingAntTemp;
-%                     infections{i, in, ind, inde}.times = infectionTimesTemp;
+                    %                     infections{i, in, ind, inde}.infectedAnts = infectedAnts;   % save the infection parameters
+                    %                     infections{i, in, ind, inde}.infectingAnts = ...
+                    %                         infectingAntTemp;
+                    %                     infections{i, in, ind, inde}.times = infectionTimesTemp;
                     infectionsTemp.infectedAnts = infectedAnts;                 % save the infection parameters
                     infectionsTemp.infectingAnts = infectingAntTemp;
                     infectionsTemp.times = infectionTimesTemp;
@@ -57,10 +63,8 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                         'File' num2str(i) ...
                         'Seg' num2str(in) 'EP' num2str(ind) ...
                         'Rep' num2str(inde) '.mat'];
-                    save(fullfile(outputFolderTempPath, fileNameTemp), ... 
-                        "infectionsTemp");
-                    clearvars infectionTimesTemp infectingAntTemp ...
-                        infectedAnts index infectionsTemp fileName
+                    parsave(infectionsTemp, outputFolderTempPath, ...
+                        fileNameTemp)
                 end
             end
         end
@@ -70,3 +74,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
     end
 end
 
+function parsave(infectionsTemp, outputFolderTempPath, fileNameTemp)
+    save(fullfile(outputFolderTempPath, fileNameTemp), ...
+        "infectionsTemp");
+end

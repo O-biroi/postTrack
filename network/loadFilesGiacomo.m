@@ -1,4 +1,4 @@
-function [xy, inNest] = loadFilesGiacomo(framesToDivide, numOfDivs, folderPath)
+function [xy, inNest, numOfFiles] = loadFilesGiacomo(framesToDivide, numOfDivs, folderPath)
 
     % framesToDivide = 6000;
     % numOfDivs = 1;
@@ -13,4 +13,5 @@ function [xy, inNest] = loadFilesGiacomo(framesToDivide, numOfDivs, folderPath)
             inNest{i, in} = ant_nest((in-1)*framesToDivide+1:in*framesToDivide, :);
         end
     end
+    numOfFiles = i;
 end
