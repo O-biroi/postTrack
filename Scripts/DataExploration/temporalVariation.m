@@ -40,9 +40,9 @@ for i = 1:numColonies
 end
 
 antOutputHeader = antOutput(:,["ColonyID","Treatment","Colour","InfectionLoad","InfectionStatus"]);
-outTemporalFull = join(outputTemporal, antOutputHeader, "Keys",["ColonyID","Colour"]);
+outTemporalFull = join(outputTemporal, antOutputHeader);
 outTemporalFull.OutNestFrames = outTemporalFull.TotalFrames -  outTemporalFull.InNestFrames;
-outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames/outTemporalFull.TotalFrames;
+outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames./outTemporalFull.TotalFrames;
 
 writetable(outTemporalFull, "outTemporalFull.csv")
 %% Plotting
