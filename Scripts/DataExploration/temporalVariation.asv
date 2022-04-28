@@ -41,7 +41,7 @@ end
 
 antOutputHeader = antOutput(:,["ColonyID","Treatment","Colour","InfectionLoad","InfectionStatus"]);
 outTemporalFull = join(outputTemporal, antOutputHeader);
-outTemporalFull.AssignmentRate = outTemporalFull.TotalFrames/framesPerDay;
+outTemporalFull.AssignmentRate = 
 outTemporalFull.OutNestFrames = outTemporalFull.TotalFrames -  outTemporalFull.InNestFrames;
 outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames./outTemporalFull.TotalFrames;
 
