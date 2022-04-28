@@ -10,7 +10,7 @@ opts = delimitedTextImportOptions("NumVariables", 4);
 
 % Specify range and delimiter
 opts.DataLines = [2, Inf];
-opts.Delimiter = ";";
+opts.Delimiter = ",";
 
 % Specify column names and types
 opts.VariableNames = ["ColonyID", "Colour", "InfectionStatus", "InfectionLoad"];
