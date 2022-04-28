@@ -5,8 +5,8 @@
 %% INPUT
 
 % input file information
-xyDir = "/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all";
-%xyDir = "/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all";
+%xyDir = "/Users/lizimai/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all";
+xyDir = "/Users/zli/Insync/zimai.li@evobio.eu/Google Drive/DoctorToBe/01_Projects/ZIM01_Nematode/P2_Tracking/01_Data/all";
 xyFileinfo = dir(fullfile(xyDir,'xy*.mat'));
 xyFilename = string((sort({xyFileinfo.name}))');
 
@@ -107,9 +107,8 @@ ylabel("Ratio of time being in nest")
 %boxchart(antOutput.ColonyTreatmentAntInfectionStatus, antOutput.InNestRatio,'Notch','on','GroupByColor', antOutput.Treatment);
 
 %% 
-
 % linear mix model, colony as random factor
-lme1 = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)')
+lme1 = fitlme(antOutput,'InNestRatio~Treatment+(1|ColonyID)');
 
 
 
