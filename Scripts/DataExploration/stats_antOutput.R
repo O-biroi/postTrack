@@ -9,7 +9,7 @@ library(EnvStats)
 library(glmmTMB)
 
 # load data
-antOutput <- read.csv("/Users/zli/Desktop/postTrack/Data/antOutput.csv")
+antOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
 antOutput %>% 
   mutate(TreatmentMerged = ifelse(Treatment == "C", "C", "Others")) -> antOutputTreatmentMerged
 

@@ -11,7 +11,7 @@ library(glmmTMB)
 # load data
 antOutputTemporal <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outTemporalFull.csv")
 antOutputTemporal$Day = as.factor(antOutputTemporal$Day)
-
-ggplot(antOutputTemporal) +
+antOutputTemporal 
+ggplot() +
   geom_jitter(aes(x = Day, y = OutNestRatio, color = Treatment)) +
   geom_boxplot(aes(x = Day, y = OutNestRatio, color = Treatment))
