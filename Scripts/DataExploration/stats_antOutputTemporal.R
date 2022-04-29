@@ -10,6 +10,7 @@ library(glmmTMB)
 
 # load data
 antOutputTemporal <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outTemporalFull.csv")
+
 antOutputTemporal$Day = as.factor(antOutputTemporal$Day)
 antOutputTemporal %>% 
   filter(AssignmentRate > 0.5) %>% 
