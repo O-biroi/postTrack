@@ -2,25 +2,33 @@
 %% Settings
 numFiles = 30;
 framesPerContinuousSegment = 12000;
-framesPerDay = 144000;
 antColour = categorical(["BB","BG","BR","GG","GR","RB","RG","RR"]'); 
 colonyID = outputFiltered.ColonyID;
 
 %% Speed variation
+numColonies = size(xy2ByContinuous,1);
+numSegments = width(speedByContinuous);
+numAnts = length(antColour);
 
 % Merge xy2 files
 xy2AllVideos = mergeSplittedXys(xy2, numFiles);
 % Split xy2 files by continuous segments
+% *ATTENTION*: only continuous segments of xy can be used for calculating
+% speed
 xy2ByContinuous = splitMergedXys(xy2AllVideos, framesPerContinuousSegment, 2);
 
+% calculate speed matrices for all the cells in xy2ByContinuous
+
+for i = 1:numColonies
+    for j = 1:numSegments
+        speedByContinuous{i,j} = calculateSpeed(xy2ByContinuous{i,j}, numAnts, 0.1, "mm/s");
+    end
+end
+
+% calculate the mean speed for each ant in each 
 
 
-%% In Nest variation
-inNestWithNansByDay = splitMergedXys(inNestWithNans, framesPerDay, 1);
 
-numColonies = length(colonyID);
-numSegments = width(inNestWithNansByDay);
-numAnts = length(antColour);
 
 sz = numColonies*numSegments*numAnts;
 vars = {'ColonyID','Colour','Day','InNestFrames','TotalFrames'};
@@ -48,6 +56,7 @@ outTemporalFull.OutNestFrames = outTemporalFull.TotalFrames -  outTemporalFull.I
 outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames./outTemporalFull.TotalFrames;
 
 writetable(outTemporalFull, "outTemporalFull.csv")
+
 %% Plotting
 
             

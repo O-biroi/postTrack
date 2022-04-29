@@ -1,19 +1,11 @@
-%% Temporal variation of the behaviour
+%% Temporal variation of outNestRatio
 %% Settings
 numFiles = 30;
-framesPerContinuousSegment = 12000;
 framesPerDay = 144000;
 antColour = categorical(["BB","BG","BR","GG","GR","RB","RG","RR"]'); 
 colonyID = outputFiltered.ColonyID;
 
-%% Speed variation
-
-% Merge xy2 files
-xy2AllVideos = mergeSplittedXys(xy2, numFiles);
-% Split xy2 files by continuous segments
-xy2ByContinuous = splitMergedXys(xy2AllVideos, framesPerContinuousSegment, 2);
-
-%% In Nest variation
+%% Out Nest variation
 inNestWithNansByDay = splitMergedXys(inNestWithNans, framesPerDay, 1);
 
 numColonies = length(colonyID);
@@ -46,6 +38,3 @@ outTemporalFull.OutNestFrames = outTemporalFull.TotalFrames -  outTemporalFull.I
 outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames./outTemporalFull.TotalFrames;
 
 writetable(outTemporalFull, "outTemporalFull.csv")
-%% Plotting
-
-            
