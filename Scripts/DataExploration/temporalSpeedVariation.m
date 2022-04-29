@@ -5,18 +5,25 @@ framesPerContinuousSegment = 12000;
 antColour = categorical(["BB","BG","BR","GG","GR","RB","RG","RR"]'); 
 colonyID = outputFiltered.ColonyID;
 
-%% Speed variation
+%% Data Wrangling
 numColonies = size(xy2ByContinuous,1);
 numSegments = width(speedByContinuous);
 numAnts = length(antColour);
 
 % Merge xy2 files
 xy2AllVideos = mergeSplittedXys(xy2, numFiles);
+
+% Mask ants when in Nest
+for i = 1:numColonies
+        xy2AllVideosMasked{i,1} = maskInNest(xy2AllVideos{i,1}, inNestWithNans{i,1});
+end
+
 % Split xy2 files by continuous segments
 % *ATTENTION*: only continuous segments of xy can be used for calculating
 % speed
-xy2ByContinuous = splitMergedXys(xy2AllVideos, framesPerContinuousSegment, 2);
+xy2ByContinuous = splitMergedXys(xy2AllVideosMasked, framesPerContinuousSegment, 2);
 
+%% Speed variation 
 % calculate speed matrices for all the cells in xy2ByContinuous
 for i = 1:numColonies
     for j = 1:numSegments
