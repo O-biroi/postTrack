@@ -12,13 +12,17 @@ numAnts = length(antColour);
 
 % Merge xy2 files
 xy2AllVideos = mergeSplittedXys(xy2, numFiles);
+
+% Mask in Nest
+for i = 1:numColonies
+        xy2AllVideosMasked = maskInNest(xy2AllVideos{i,1}, inNestWithNans{i,1})
+        
 % Split xy2 files by continuous segments
 % *ATTENTION*: only continuous segments of xy can be used for calculating
 % speed
 xy2ByContinuous = splitMergedXys(xy2AllVideos, framesPerContinuousSegment, 2);
 
 % calculate speed matrices for all the cells in xy2ByContinuous
-
 for i = 1:numColonies
     for j = 1:numSegments
         speedByContinuous{i,j} = calculateSpeed(xy2ByContinuous{i,j}, numAnts, 0.1, "mm/s");
@@ -26,36 +30,30 @@ for i = 1:numColonies
 end
 
 % calculate the mean speed for each ant in each 
-
-
-
-
 sz = numColonies*numSegments*numAnts;
-vars = {'ColonyID','Colour','Day','InNestFrames','TotalFrames'};
-varTypes = {'categorical','categorical','double','double','double'};
+vars = {'ColonyID','Colour','ContinuousSegment','MeanSpeed', 'AssignmentRate'};
+varTypes = {'categorical','categorical','double','double', 'double'};
 
-outputTemporal = table('Size',[sz,length(vars)], 'VariableTypes', varTypes, 'VariableNames', vars);
+outputSpeedTemp = table('Size',[sz,length(vars)], 'VariableTypes', varTypes, 'VariableNames', vars);
 
 for i = 1:numColonies
     for j = 1:numSegments
+        totalFrame = size(speedByContinuous{i,j},1);
         for k = 1:numAnts
             numRow = (i-1)*numSegments*numAnts + (j-1)*numAnts +k;
-            outputTemporal.ColonyID(numRow) = colonyID(i);
-            outputTemporal.Colour(numRow) = antColour(k);
-            outputTemporal.Day(numRow) = j;
-            outputTemporal.InNestFrames(numRow) = sum(inNestWithNansByDay{i, j}(:,k),"omitnan");
-            outputTemporal.TotalFrames(numRow) = length(inNestWithNansByDay{i, j}(:,k)) - sum(isnan(inNestWithNansByDay{i, j}(:,k)));
+            outputSpeedTemp.ColonyID(numRow) = colonyID(i);
+            outputSpeedTemp.Colour(numRow) = antColour(k);
+            outputSpeedTemp.ContinuousSegment(numRow) = j;
+            outputSpeedTemp.MeanSpeed(numRow) = mean(speedByContinuous{i, j}(:,k),"omitnan");
+            outputSpeedTemp.AssignmentRate(numRow) = 1- sum(sum(isnan(speedByContinuous{i, j}(:,k))))/totalFrame;
         end
     end
 end
 
 antOutputHeader = antOutput(:,["ColonyID","Treatment","Colour","InfectionLoad","InfectionStatus"]);
-outTemporalFull = join(outputTemporal, antOutputHeader);
-outTemporalFull.AssignmentRate = outTemporalFull.TotalFrames/framesPerDay;
-outTemporalFull.OutNestFrames = outTemporalFull.TotalFrames -  outTemporalFull.InNestFrames;
-outTemporalFull.OutNestRatio =outTemporalFull.OutNestFrames./outTemporalFull.TotalFrames;
+outputSpeedTempFull = join(outputSpeedTemp, antOutputHeader);
 
-writetable(outTemporalFull, "outTemporalFull.csv")
+writetable(outputSpeedTempFull, "outputSpeedTemporalFull.csv")
 
 %% Plotting
 
