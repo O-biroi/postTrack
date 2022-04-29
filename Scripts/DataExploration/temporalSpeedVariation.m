@@ -26,7 +26,7 @@ end
 
 % calculate the mean speed for each ant in each 
 sz = numColonies*numSegments*numAnts;
-vars = {'ColonyID','Colour','ContinuousSegment','MeanSpeed', 'AsssignmentRate'};
+vars = {'ColonyID','Colour','ContinuousSegment','MeanSpeed', 'AssignmentRate'};
 varTypes = {'categorical','categorical','double','double', 'double'};
 
 outputSpeedTemp = table('Size',[sz,length(vars)], 'VariableTypes', varTypes, 'VariableNames', vars);
@@ -47,7 +47,6 @@ end
 
 antOutputHeader = antOutput(:,["ColonyID","Treatment","Colour","InfectionLoad","InfectionStatus"]);
 outputSpeedTempFull = join(outputSpeedTemp, antOutputHeader);
-%outputSpeedTempFull.AssignmentRate = outputSpeedTempFull.TotalFrames/framesPerDay;
 
 writetable(outputSpeedTempFull, "outputSpeedTemporalFull.csv")
 
