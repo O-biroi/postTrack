@@ -3,8 +3,8 @@
 function [speedMatrix] = calculateSpeed(xyMatrix, numAnts,secondEachFrame, unit)
 arguments
     xyMatrix double;
-    numAnts (1,1) double;
-    secondEachFrame (1,1) double;
+    numAnts (1,1) double; % number of ants in a colony
+    secondEachFrame (1,1) double; % the number of second between each frame
     unit (1,1) string = "m/s";
 end
 for i = 1:numAnts
