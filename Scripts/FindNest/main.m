@@ -1,3 +1,5 @@
+clear all
+
 %% Read input parameters
 inputs
 

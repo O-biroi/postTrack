@@ -1,9 +1,0 @@
-xy = xy2AllVideos{1,1};
-inNest = inNestWithNans{1,1};
-
-%%
-function [xyMasked] = maskInNest(xy, inNest)
-    inNestRep = repelem(inNest, 2);
-    idx = find(inNestRep == 1);
-    xy(idx) = "Nest";
-end

@@ -92,6 +92,7 @@ antOutput.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(antOutpu
 writetable(antOutput, "antOutput.csv")
 %% Statistics
 % make violin charts
+
 figure;
 violinplot(antOutput.OutNestRatio, antOutput.Treatment);
 xticklabels({'Uninfected','Infected','Mix'});

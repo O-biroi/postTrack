@@ -43,8 +43,6 @@ Anova(fit2, type = "II")
 summary(fit2)
 
 
-
-
 antOutputTreatmentMerged %>% 
   filter(InfectionLoad != 0 & InfectionLoad != "NaN") -> antOutputAllInfected
 
