@@ -13,11 +13,17 @@ antOutputTemporal <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outTemporal
 
 antOutputTemporal$Day = as.factor(antOutputTemporal$Day)
 antOutputTemporal %>% 
+  mutate(TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus))) -> antOutputTemporalfull
+  
+antOutputTemporalfull %>% 
   filter(AssignmentRate > 0.5) %>% 
   ggplot() +
-  geom_jitter(aes(x = Day, y = OutNestRatio, color = Treatment, alpha = 0.1) ) +
-  geom_boxplot(aes(x = Day, y = OutNestRatio, color = Treatment)) +
-  stat_n_text(aes(x = Day, y = OutNestRatio, color = Treatment))
+  geom_jitter(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus, alpha = 0.1) ) +
+  geom_boxplot(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus)) +
+  stat_n_text(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus))
+
+
+
 
 fit4 <- glmmTMB(formula = cbind(OutNestFrames, InNestFrames) ~ Treatment*Day + (1|ColonyID), data = antOutputTemporal, ziformula = ~., family = betabinomial())
 simulationOutput <- simulateResiduals(fittedModel = fit4, plot = F)
@@ -34,4 +40,3 @@ antOutputTemporal %>%
   geom_jitter(aes(x = Treatment, y = OutNestRatio, color = Treatment, alpha = 0.1) ) +
   geom_boxplot(aes(x = Treatment, y = OutNestRatio, color = Treatment)) +
   stat_n_text(aes(x = Treatment, y = OutNestRatio, color = Treatment))
- ,zz
