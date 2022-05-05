@@ -9,9 +9,12 @@ library(EnvStats)
 library(glmmTMB)
 
 # load data
-antOutput <- read.csv("/Users/zli/Desktop/postTrack/Data/antOutput.csv")
-antOutput %>% 
+antOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
+antInfectionStatus <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antInfectionStatus.csv")
+
+left_join(antOutput, antInfectionStatus) %>% 
   mutate(TreatmentMerged = ifelse(Treatment == "C", "C", "Others")) -> antOutputTreatmentMerged
+
 
 antOutput %>% 
   group_by(Treatment) %>% 
@@ -48,6 +51,8 @@ antOutputTreatmentMerged %>%
 
 ggplot(antOutputAllInfected, aes(x = InfectionLoad, y = OutNestRatio, colour = Treatment)) +
   geom_jitter()
+
+cor.test(antOutputAllInfected$InfectionLoad, antOutputAllInfected$OutNestRatio, method = "spearman")
 
 # zero inflation
 fit3 <- glmmTMB(cbind(OutNestFrame, InNestFrame) ~ InfectionLoad + (1|ColonyID),data = antOutputAllInfected,  family = binomial())
