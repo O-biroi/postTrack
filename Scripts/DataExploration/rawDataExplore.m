@@ -104,7 +104,7 @@ figure;
 violinplot(antOutput.OutNestRatio, antOutput.ColonyTreatmentAntInfectionStatus);
 xticklabels({'Uninfected - uninfected','Infected - infected','Mix - Uninfected', 'Mix - infected'});
 xlabel("Colony Treatment - Ant Infection Status");
-ylabel("Ratio of time being in nest")
+ylabel("Ratio of time being outside the nest")
 %boxchart(antOutput.ColonyTreatmentAntInfectionStatus, antOutput.InNestRatio,'Notch','on','GroupByColor', antOutput.Treatment);
 
 %% 

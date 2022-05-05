@@ -23,5 +23,8 @@ nestBoundaries = nestBoundariesCalc2(xy, nestArea, bins.edges, bins.size);
 [xy2, counter, nansToStart, nansRemoved] = dealWithNans4(xy, beginNansInd, endNansInd, nestBoundaries, parameters.DurationThresh);
 inNest = inNestCalc(xy2, nestBoundaries);
 
+
+%% Copy NaNs to inNest
+inNestWithNansRaw = copyNans(xy, inNest); 
 %%Save results
 % saveInterpolation(xy2, parameters.saveXY2, names, inNest, IDs, data);
