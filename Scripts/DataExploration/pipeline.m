@@ -38,15 +38,6 @@ xy2SplitByContinuousSegment = splitMergedXys(xy2Merged, parameters.framesPerCont
 
 xy2SplitByContinuousSegmentMaskInNest = maskInNest4XySplitted(xy2SplitByContinuousSegment, inNestWithNansSplitByContinuousSegment, 2, nan); % mask in nest frames for speed calculation
 
-% create colony table with experiment information in the xy file names
-outputColonyTable = table(string((sort(names))'),'VariableNames',{'Filename'});
-splitNames = split(outputColonyTable.Filename, ["_","."]);
-outputColonyTable.Treatment = categorical(splitNames(:, 2));
-outputColonyTable.ColonyID = categorical(append(splitNames(:, 2),"_", splitNames(:, 3)));
-
-% create ant table that will be nested in colony table
-antTable = table(parameters.antColour, 'VariableNames',{'Colour'}); % create empty ant table for data storage of ants in each colony 
-
 clear("splitNames");
 %% Step 3. Calculate assignment rate, speed, in nest ratio by day
 % Speed calculation
@@ -56,8 +47,26 @@ speedSplitByContinuousSegmentMaskInNest = calculateSpeed4XySplitted(xy2SplitByCo
 speedMergedMaskInNest = mergeSplittedXys(speedSplitByContinuousSegmentMaskInNest, parameters.numOfAnts, 1);
 speedSplitByDayMaskInNest = splitMergedXys(speedMergedMaskInNest, parameters.framesPerDay - 12, 1); % only for calculating speed by day, cannot be used for matching frames with xy/inNest
 
-% making output ant table
-outputAntTable = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+% load experiment information
 run("loadInfectionStatus.m"); 
 
+% produce output table
+outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableMergedJoined = join(outputAntTableMerged, antInfectionStatus);
+outputAntTableByDayJoined = join(outputAntTableByDay, antInfectionStatus);
 
+
+%% Step 4: Plotting
+figure;
+violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.Treatment);
+xticklabels({'Uninfected','Infected','Mix'});
+xlabel("Colony Treatment");
+ylabel("Ratio of time being outside the nest")
+
+outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(outputAntTableMergedJoined.Treatment), "_",string(outputAntTableMergedJoined.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
+figure;
+violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus);
+xticklabels({'Uninfected - uninfected','Infected - infected','Mix - Uninfected', 'Mix - infected'});
+xlabel("Colony Treatment - Ant Infection Status");
+ylabel("Ratio of time being outside the nest")
