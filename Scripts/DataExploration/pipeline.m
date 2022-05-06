@@ -56,6 +56,9 @@ outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay
 outputAntTableMergedJoined = join(outputAntTableMerged, antInfectionStatus);
 outputAntTableByDayJoined = join(outputAntTableByDay, antInfectionStatus);
 
+% save the data 
+writetable(outputAntTableMergedJoined, "../../Data/outputAntTableMergedJoined.csv");
+writetable(outputAntTableByDayJoined, "../../Data/outputAntTableByDayJoined.csv");
 
 %% Step 4: Plotting
 figure;
