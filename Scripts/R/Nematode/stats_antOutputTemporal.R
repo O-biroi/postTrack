@@ -9,7 +9,7 @@ library(EnvStats)
 library(glmmTMB)
 
 # load data
-antOutputTemporal <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outTemporalFull.csv")
+antOutputTemporal <- read.csv("Data/outTemporalFull.csv")
 
 antOutputTemporal$Day = as.factor(antOutputTemporal$Day)
 antOutputTemporal %>% 
@@ -21,9 +21,6 @@ antOutputTemporalfull %>%
   geom_jitter(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus, alpha = 0.1) ) +
   geom_boxplot(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus)) +
   stat_n_text(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus))
-
-
-
 
 fit4 <- glmmTMB(formula = cbind(OutNestFrames, InNestFrames) ~ Treatment*Day + (1|ColonyID), data = antOutputTemporal, ziformula = ~., family = betabinomial())
 simulationOutput <- simulateResiduals(fittedModel = fit4, plot = F)
