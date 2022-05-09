@@ -2,7 +2,7 @@ parameters.time = datetime;
 
 parameters.numOfFrames = 12000; % within segment
 parameters.numOfSegments = 2;
-parameters.folderPath = '/shares/ulr-lab/users/daniel/GiacomoData/y';
+parameters.filePath = '/shares/ulr-lab/users/daniel/GiacomoData/y';
 
 parameters.withNest = 1;
 
