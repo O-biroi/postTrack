@@ -65,15 +65,19 @@ writetable(outputAntTableByDayJoined, [pathname,filename]);
 
 clear("filename","pathname");
 %% Step 4: Plotting
-figure;
+v1 = figure;
 violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.Treatment);
-xticklabels({'Uninfected','Infected','Mix'});
-xlabel("Colony Treatment");
+xticklabels({'Uninfected','Infected','Mix'})
+xlabel("Colony Treatment")
 ylabel("Ratio of time being outside the nest")
+[filename, pathname] = uiputfile('*.svg');
+saveas(v1, [pathname,filename], 'svg');
 
 outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(outputAntTableMergedJoined.Treatment), "_",string(outputAntTableMergedJoined.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
-figure;
+v2 = figure;
 violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus);
-xticklabels({'Uninfected - uninfected','Infected - infected','Mix - Uninfected', 'Mix - infected'});
-xlabel("Colony Treatment - Ant Infection Status");
+xticklabels({'Uninfected - uninfected','Infected - infected','Mix - Uninfected', 'Mix - infected'})
+xlabel("Colony Treatment - Ant Infection Status")
 ylabel("Ratio of time being outside the nest")
+[filename, pathname] = uiputfile('*.svg');
+saveas(v2, [pathname,filename], 'svg');
