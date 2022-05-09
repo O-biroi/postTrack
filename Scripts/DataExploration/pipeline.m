@@ -57,9 +57,13 @@ outputAntTableMergedJoined = join(outputAntTableMerged, antInfectionStatus);
 outputAntTableByDayJoined = join(outputAntTableByDay, antInfectionStatus);
 
 % save the data 
-writetable(outputAntTableMergedJoined, "../../Data/outputAntTableMergedJoined.csv");
-writetable(outputAntTableByDayJoined, "../../Data/outputAntTableByDayJoined.csv");
 
+[filename, pathname] = uiputfile('*.csv');
+writetable(outputAntTableMergedJoined, [pathname,filename]);
+[filename, pathname] = uiputfile('*.csv');
+writetable(outputAntTableByDayJoined, [pathname,filename]);
+
+clear("filename","pathname");
 %% Step 4: Plotting
 figure;
 violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.Treatment);
