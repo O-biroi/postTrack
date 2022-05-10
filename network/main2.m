@@ -1,10 +1,11 @@
 clear all
 
+parpool('local', 32)
 inputs2
 
 disp('load');
 tic
-[xy, inNest] = load(parameters.filePath, parameters.variables);
+load(parameters.filePath);
 toc
 
 disp('distancesClac');
@@ -25,7 +26,7 @@ toc
 disp('simTempNetwork');
 i = 0;
 iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
-for in = iterations
+parfor in = iterations
     disp (['iteration ' num2str(i) ' out of ' num2str(length(iterations))]);
     simTempNetwork(contactsPerAnt, in, parameters.entryPoints, parameters.numOfReps, parameters.outputFolderPath);
 end

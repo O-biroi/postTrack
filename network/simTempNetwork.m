@@ -4,7 +4,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
     % numOfReps = 10;
     % infectionProb = 0.01;
 
-    outputFolderTempPath = fullfile(outputFolderPath, 'temp');
+    outputFolderTempPath = fullfile(outputFolderPath);
     if ~exist(outputFolderTempPath, 'dir')
         mkdir(outputFolderTempPath);
     end

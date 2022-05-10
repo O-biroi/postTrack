@@ -1,7 +1,6 @@
 parameters.time = datetime;
 
-parameters.filePath = '/Users/daniel/Documents/Academia/Post-Ulrich/postTrackGitHub/postTrack/network/cleanXY.mat';
-parameters.variables = 'cleanOld';
+parameters.filePath = '/Users/daniel/Desktop/oldClean.mat';
 
 parameters.withNest = 1;
 

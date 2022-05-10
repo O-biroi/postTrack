@@ -10,7 +10,7 @@ parameters.contactThresh = 0.002;
 parameters.infectionProbs = [0.001 0.101];
 parameters.infectionProbsJumps = 0.1;
 parameters.entryPoints = 16;
-parameters.numOfReps = 10;
+parameters.numOfReps = 20;
 
 parameters.outputFolderPath = '/shares/ulr-lab/users/daniel/networks/output2';
 parameters.fileName = 'old.mat';
