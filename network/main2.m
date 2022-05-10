@@ -1,10 +1,10 @@
 clear all
 
-inputs3
+inputs2
 
 disp('load');
 tic
-load
+[xy, inNest] = load(parameters.filePath, parameters.variables);
 toc
 
 disp('distancesClac');
@@ -31,6 +31,6 @@ for in = iterations
 end
 
 clearvars i in
-% 
+%
 % disp(['saving as: ' fullfile(parameters.outputFolderPath, parameters.fileName)])
 % save(fullfile(parameters.outputFolderPath, parameters.fileName), "infections", "parameters")

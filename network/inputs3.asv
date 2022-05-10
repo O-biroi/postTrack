@@ -1,7 +1,7 @@
 parameters.time = datetime;
 
 parameters.filePath = '/shares/ulr-lab/users/daniel/cleanXY.mat';
-parameters.variables = 'old';
+parameters.variables = 'old'
 
 parameters.withNest = 1;
 
