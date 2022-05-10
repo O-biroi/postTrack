@@ -9,17 +9,31 @@ library(EnvStats)
 library(glmmTMB)
 
 # load data
-antOutput <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antOutput.csv")
-antInfectionStatus <- read.csv("/Users/lizimai/Desktop/postTrack/Data/antInfectionStatus.csv")
+AntTable <- read_csv("Data/outputAntTableMergedJoined.csv")
+InfectionStatus <- read_delim("Data/antInfectionStatus.csv", delim = ";")
+
+
+
+left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus")) %>% 
+  mutate(
+    TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
+    Treatment = as.factor(Treatment),
+    InfectionStatus = as.factor(InfectionStatus)) %>% 
+  filter(TreatmentInfectionStatus != "C_uninfected" & TreatmentInfectionStatus != "X_uninfected") -> AntTableFull
+
+
+
+AntTableFull %>% 
+  group_by(Treatment) %>% 
+  summarise(MeanOutNestRatio = mean(OutNestRatio),
+            SdOutNestRatio = sd(OutNestRatio))
+
+
 
 left_join(antOutput, antInfectionStatus) %>% 
   mutate(TreatmentMerged = ifelse(Treatment == "C", "C", "Others")) -> antOutputTreatmentMerged
 
 
-antOutput %>% 
-  group_by(Treatment) %>% 
-  summarise(MeanOutNestRatio = mean(OutNestRatio),
-            SdOutNestRatio = sd(OutNestRatio))
 
 fit1 <- glmer(cbind(OutNestFrame, InNestFrame) ~ Treatment + InfectionLoad + (1|ColonyID), data = antOutputTreatmentMerged,  family = binomial())
 testDispersion(fit1)
@@ -49,8 +63,7 @@ summary(fit2)
 antOutputTreatmentMerged %>% 
   filter(InfectionLoad != 0 & InfectionLoad != "NaN") -> antOutputAllInfected
 
-ggplot(antOutputAllInfected, aes(x = InfectionLoad, y = OutNestRatio, colour = Treatment)) +
-  geom_jitter()
+
 
 cor.test(antOutputAllInfected$InfectionLoad, antOutputAllInfected$OutNestRatio, method = "spearman")
 

@@ -1,0 +1,47 @@
+---
+title: "Statistical analysis for the temporal variation of behaviour"
+output: html_notebook
+---
+ 
+```{r load packages}
+library(tidyverse)
+library(EnvStats)
+library(lme4)
+library(lmerTest)
+library(DHARMa)
+library(car)
+library(multcomp)
+library(EnvStats)
+library(glmmTMB)
+```
+
+```{r load data}
+
+AntTable <- read_csv(here::here("Data/outputAntTableMergedJoined.csv"))
+InfectionStatus <- read_delim(here::here("Data/antInfectionStatus.csv"), delim = ";")
+```
+
+```{r}
+left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus", "InfectionLoad", "Treatment")) %>% 
+  mutate(
+    TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
+    Treatment = as.factor(Treatment),
+    InfectionStatus = as.factor(InfectionStatus))  -> AntTableFull
+```
+
+```{r}
+AntTableFull %>% 
+  filter(AssignmentRate > 0.5) %>% 
+  ggplot(aes(x = TreatmentInfectionStatus, y = OutNestRatio)) +
+  geom_jitter(aes(color = TreatmentInfectionStatus), alpha = 0.5) +
+  geom_violin(aes(fill = TreatmentInfectionStatus), color = "darkgray", lwd=0.3, alpha = 0.4) +
+  geom_boxplot(aes(color = TreatmentInfectionStatus), fill = "darkgray", alpha = 0.7, outlier.shape = NA, width=0.05) +
+  #scale_color_manual(name = "Colony Treatment", labels = c("Infected", "Mixed"), values = c("T" = "#D95319", "X" = "#7E2F8E")) +
+  stat_n_text()+
+  theme_bw(base_size = 14) +
+  theme(legend.position = "bottom") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+
