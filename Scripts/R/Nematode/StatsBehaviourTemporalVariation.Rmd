@@ -1,0 +1,47 @@
+---
+title: "Statistical analysis for the temporal variation of behaviour"
+output: html_notebook
+---
+ 
+```{r load packages}
+library(tidyverse)
+library(EnvStats)
+library(lme4)
+library(lmerTest)
+library(DHARMa)
+library(car)
+library(multcomp)
+library(EnvStats)
+library(glmmTMB)
+```
+
+```{r load data}
+AntTableByDay <- read_csv("Data/outputAntTableByDayJoined.csv")
+InfectionStatus <- read_delim("Data/antInfectionStatus.csv", delim = ";")
+```
+
+```{r}
+left_join(AntTableByDay, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus"))%>% 
+    mutate(
+      Day = as.factor(Day),
+      TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
+      Treatment = as.factor(Treatment),
+      InfectionStatus = as.factor(InfectionStatus)) -> AntTableByDayfull
+```
+
+```{r}
+AntTableByDayfull %>% 
+  filter(AssignmentRate > 0.5) %>% 
+  ggplot(aes(x = Day, y = OutNestRatio, color = TreatmentInfectionStatus,alpha = 0.5)) +
+  geom_jitter(aes(alpha = 0.5) ) +
+  geom_boxplot() +
+  stat_n_text()
+
+AntTableByDayfull %>% 
+  filter(AssignmentRate > 0.5) %>% 
+  ggplot(aes(x = Day, y = MeanSpeed, color = TreatmentInfectionStatus,alpha = 0.5)) +
+  geom_jitter(aes(alpha = 0.5) ) +
+  geom_boxplot() +
+  stat_n_text()
+```
+

@@ -1,2 +1,9 @@
 
-.DS_Store
+30Colonies.mat
+
+Data/outputFindNest.mat
+
+Scripts/DataExploration/.Rhistory
+.Rproj.user
+
+*.mat
