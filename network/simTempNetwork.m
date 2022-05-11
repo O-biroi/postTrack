@@ -9,7 +9,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
         mkdir(outputFolderTempPath);
     end
 
-    parfor i = 1:size(contactsPerAnt, 1)                                       % for each file
+    for i = 1:size(contactsPerAnt, 1)                                       % for each file
         tic
         parfor in = 1:size(contactsPerAnt, 2)                                  % for each segment
             for ind = 1:length(entryPoints)                                 % for each entry point
