@@ -11,5 +11,5 @@ parameters.infectionProbsJumps = 0.5;
 parameters.entryPoints = 16;
 parameters.numOfReps = 2;
 
-parameters.outputFolderPath = '/Users/daniel/Documents/Academia/Post-Ulrich/postTrackGitHub/postTrack/network/output2';
+parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/git/postTrack/network';
 parameters.fileName = 'old.mat';
