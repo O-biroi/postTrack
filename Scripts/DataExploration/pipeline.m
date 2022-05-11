@@ -44,15 +44,17 @@ clear("splitNames");
 parameters.secondEachFrame = 0.1;
 parameters.unit = "mm/s";
 speedSplitByContinuousSegmentMaskInNest = calculateSpeed4XySplitted(xy2SplitByContinuousSegmentMaskInNest, parameters.numOfAnts, parameters.secondEachFrame, parameters.unit);
-speedMergedMaskInNest = mergeSplittedXys(speedSplitByContinuousSegmentMaskInNest, parameters.numOfAnts, 1);
-speedSplitByDayMaskInNest = splitMergedXys(speedMergedMaskInNest, parameters.framesPerDay - 12, 1); % only for calculating speed by day, cannot be used for matching frames with xy/inNest
+
+speedSplitByContinuousSegmentMaskInNestMaskImpSpeed = maskImpSpeed4SpeedSplitted(speedSplitByContinuousSegmentMaskInNest, 5, nan);
+speedMergedMaskInNestMaskImpSpeed = mergeSplittedXys(speedSplitByContinuousSegmentMaskInNestMaskImpSpeed, parameters.numOfAnts, 1);
+speedSplitByDayMaskInNestMaskImpSpeed = splitMergedXys(speedMergedMaskInNestMaskImpSpeed, parameters.framesPerDay - 12, 1); % only for calculating speed by day, cannot be used for matching frames with xy/inNest
 
 % load experiment information
 run("loadInfectionStatus.m"); 
 
 % produce output table
-outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
-outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
 outputAntTableMergedJoined = join(outputAntTableMerged, antInfectionStatus);
 outputAntTableByDayJoined = join(outputAntTableByDay, antInfectionStatus);
 
@@ -74,31 +76,13 @@ saveas(v1, [pathname,filename], 'svg');
 
 outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(outputAntTableMergedJoined.Treatment), "_",string(outputAntTableMergedJoined.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
 
-% [#003f5c;#2f4b7c;#665191;#a05195,#d45087
-% #f95d6a
-% #ff7c43
-% #ffa600]
-% 
-% 
-% #00876c
-% #3f9a70
-% #66ac73
-% #8bbe78
-% #b1ce7e
-% #d7df88
-% #ffee95
-% #fcd37b
-% #f9b767
-% #f49a59
-% #ec7d51
-% #e25e4f
-% #d43d51
+
+colorVector =  [0, 135, 108;
+    236 125 81;
+    177 206 126;
+    252 211 123]./ 255;
 
 
-   colorVector =  [63, 154, 112;
-    47 75 124;
-    102 81 145;
-    160 81 149]./ 255
 v2 = figure;
 violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
 xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
@@ -106,3 +90,33 @@ xlabel("Colony Treatment - Ant Infection Status")
 ylabel("Ratio of time being outside the nest")
 [filename, pathname] = uiputfile('*.svg');
 saveas(v2, [pathname,filename], 'svg');
+
+
+v3 = figure;
+violinplot(outputAntTableMergedJoined.MeanSpeed, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
+xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
+[filename, pathname] = uiputfile('*.pdf');
+saveas(v3, [pathname,filename], 'pdf');
+
+
+
+outputAntTableMergedJoinedOnlyInfected = outputAntTableMergedJoined(outputAntTableMergedJoined.InfectionLoad > 0,:);
+s1 = figure;
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.OutNestRatio(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), 40, 'filled', 'MarkerFaceColor',colorVector(2,:),'MarkerFaceAlpha', 0.7); 
+hold on
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.OutNestRatio(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), 40, 'filled','MarkerFaceColor',colorVector(4,:),'MarkerFaceAlpha', 0.7); 
+hold off
+[filename, pathname] = uiputfile('*.pdf');
+saveas(s1, [pathname,filename], 'pdf');
+
+s2 = figure;
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.MeanSpeed(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), 40, 'filled', 'MarkerFaceColor',colorVector(2,:),'MarkerFaceAlpha', 0.7); 
+hold on
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.MeanSpeed(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), 40, 'filled','MarkerFaceColor',colorVector(4,:),'MarkerFaceAlpha', 0.7); 
+hold off
+[filename, pathname] = uiputfile('*.pdf');
+saveas(s2, [pathname,filename], 'pdf');

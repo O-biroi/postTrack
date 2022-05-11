@@ -43,12 +43,7 @@ Anova(fit1, type = "II")
 summary(fit1)
 
 
-fit2 <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentMerged + (1|ColonyID), data = antOutputTreatmentMerged, family = binomial())
-testDispersion(fit2)
-simulationOutput <- simulateResiduals(fittedModel = fit2, plot = F)
-plot(simulationOutput)
-Anova(fit2, type = "II")
-summary(fit2)
+œ
 
 anova(fit1, fit2)
 
