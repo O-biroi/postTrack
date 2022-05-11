@@ -74,25 +74,25 @@ saveas(v1, [pathname,filename], 'svg');
 
 outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(outputAntTableMergedJoined.Treatment), "_",string(outputAntTableMergedJoined.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
 
-[#003f5c;#2f4b7c;#665191;#a05195,#d45087
-#f95d6a
-#ff7c43
-#ffa600]
-
-
-#00876c
-#3f9a70
-#66ac73
-#8bbe78
-#b1ce7e
-#d7df88
-#ffee95
-#fcd37b
-#f9b767
-#f49a59
-#ec7d51
-#e25e4f
-#d43d51
+% [#003f5c;#2f4b7c;#665191;#a05195,#d45087
+% #f95d6a
+% #ff7c43
+% #ffa600]
+% 
+% 
+% #00876c
+% #3f9a70
+% #66ac73
+% #8bbe78
+% #b1ce7e
+% #d7df88
+% #ffee95
+% #fcd37b
+% #f9b767
+% #f49a59
+% #ec7d51
+% #e25e4f
+% #d43d51
 
 
    colorVector =  [63, 154, 112;
