@@ -11,7 +11,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
 
     parfor i = 1:size(contactsPerAnt, 1)                                       % for each file
         tic
-        for in = 1:size(contactsPerAnt, 2)                                  % for each segment
+        parfor in = 1:size(contactsPerAnt, 2)                                  % for each segment
             for ind = 1:length(entryPoints)                                 % for each entry point
                 for inde = 1:numOfReps                                   % for each simulation replication
                     infectionsTemp = [];

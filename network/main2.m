@@ -26,7 +26,7 @@ toc
 disp('simTempNetwork');
 i = 0;
 iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
-parfor in = iterations
+for in = iterations
     disp (['iteration ' num2str(i) ' out of ' num2str(length(iterations))]);
     simTempNetwork(contactsPerAnt, in, parameters.entryPoints, parameters.numOfReps, parameters.outputFolderPath);
 end
