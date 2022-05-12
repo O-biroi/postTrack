@@ -49,12 +49,15 @@ panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ```{r model for in nest}
 # generalised linear mixed model
-glmerOutNestTreatmentInfectionStatus <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull, family = binomial())
+glmerOutNestTreatmentInfectionStatus <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull, ziformula = ~.)
+
+hist(AntTableFull$OutNestRatio)
 
 testDispersion(glmerOutNestTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
 summary(glmerOutNestTreatmentInfectionStatus)
+Anova(glmerOutNestTreatmentInfectionStatus)
 
 posthocGlmerOutNestTreatmentInfectionStatus <- glht(glmerOutNestTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
 summary(posthocGlmerOutNestTreatmentInfectionStatus)
@@ -76,10 +79,6 @@ plot.dat <- data.frame(prob = AntTableFull$OutNestFrame/AntTableFull$TotalFrame,
                        fit = predict(glmerOutNestTreatmentInfectionStatusSub1, menarche))
 #convert those logit values to probabilities
 plot.dat$fit_prob <- exp(plot.dat$fit)/(1+exp(plot.dat$fit))
-
-
-
-
 
 lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull,)
 testDispersion(lmerSpeedTreatmentInfectionStatus)
