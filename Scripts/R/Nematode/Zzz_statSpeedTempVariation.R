@@ -7,8 +7,8 @@ library(multcomp)
 library(EnvStats)
 library(glmmTMB)
 
-antSpeedTemporalOrignial <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outputSpeedTemporalFull.csv")
-antOutNestSpeedTemporalOrignial <- read.csv("/Users/lizimai/Desktop/postTrack/Data/outputOutNestSpeedTemporalFull.csv")
+antSpeedTemporalOrignial <- read.csv("/Users/zli/Desktop/postTrack/Data/outputSpeedTemporalFull.csv")
+antOutNestSpeedTemporalOrignial <- read.csv("/Users/zli/Desktop/postTrack/Data/outputOutNestSpeedTemporalFull.csv")
 
 ### Compare Mean Speed
 antSpeedTemporalOrignial %>% 

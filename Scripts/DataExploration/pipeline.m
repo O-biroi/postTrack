@@ -44,32 +44,79 @@ clear("splitNames");
 parameters.secondEachFrame = 0.1;
 parameters.unit = "mm/s";
 speedSplitByContinuousSegmentMaskInNest = calculateSpeed4XySplitted(xy2SplitByContinuousSegmentMaskInNest, parameters.numOfAnts, parameters.secondEachFrame, parameters.unit);
-speedMergedMaskInNest = mergeSplittedXys(speedSplitByContinuousSegmentMaskInNest, parameters.numOfAnts, 1);
-speedSplitByDayMaskInNest = splitMergedXys(speedMergedMaskInNest, parameters.framesPerDay - 12, 1); % only for calculating speed by day, cannot be used for matching frames with xy/inNest
+
+speedSplitByContinuousSegmentMaskInNestMaskImpSpeed = maskImpSpeed4SpeedSplitted(speedSplitByContinuousSegmentMaskInNest, 5, nan);
+speedMergedMaskInNestMaskImpSpeed = mergeSplittedXys(speedSplitByContinuousSegmentMaskInNestMaskImpSpeed, parameters.numOfAnts, 1);
+speedSplitByDayMaskInNestMaskImpSpeed = splitMergedXys(speedMergedMaskInNestMaskImpSpeed, parameters.framesPerDay - 12, 1); % only for calculating speed by day, cannot be used for matching frames with xy/inNest
 
 % load experiment information
 run("loadInfectionStatus.m"); 
 
 % produce output table
-outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
-outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNest, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
+outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
 outputAntTableMergedJoined = join(outputAntTableMerged, antInfectionStatus);
 outputAntTableByDayJoined = join(outputAntTableByDay, antInfectionStatus);
 
 % save the data 
-writetable(outputAntTableMergedJoined, "../../Data/outputAntTableMergedJoined.csv");
-writetable(outputAntTableByDayJoined, "../../Data/outputAntTableByDayJoined.csv");
+[filename, pathname] = uiputfile('*.csv');
+writetable(outputAntTableMergedJoined, [pathname,filename]);
+[filename, pathname] = uiputfile('*.csv');
+writetable(outputAntTableByDayJoined, [pathname,filename]);
 
+clear("filename","pathname");
 %% Step 4: Plotting
-figure;
+v1 = figure;
 violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.Treatment);
-xticklabels({'Uninfected','Infected','Mix'});
-xlabel("Colony Treatment");
+xticklabels({'Uninfected','Infected','Mix'})
+xlabel("Colony Treatment")
 ylabel("Ratio of time being outside the nest")
+[filename, pathname] = uiputfile('*.svg');
+saveas(v1, [pathname,filename], 'svg');
 
 outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus = categorical(strcat(string(outputAntTableMergedJoined.Treatment), "_",string(outputAntTableMergedJoined.InfectionStatus)), ["C_uninfected", "T_infected", "X_uninfected", "X_infected"]);
-figure;
-violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus);
-xticklabels({'Uninfected - uninfected','Infected - infected','Mix - Uninfected', 'Mix - infected'});
-xlabel("Colony Treatment - Ant Infection Status");
+
+
+colorVector =  [0, 135, 108;
+    236 125 81;
+    177 206 126;
+    252 211 123]./ 255;
+
+
+v2 = figure;
+violinplot(outputAntTableMergedJoined.OutNestRatio, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
+xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
+xlabel("Colony Treatment - Ant Infection Status")
 ylabel("Ratio of time being outside the nest")
+[filename, pathname] = uiputfile('*.svg');
+saveas(v2, [pathname,filename], 'svg');
+
+
+v3 = figure;
+violinplot(outputAntTableMergedJoined.MeanSpeed, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
+xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
+[filename, pathname] = uiputfile('*.pdf');
+saveas(v3, [pathname,filename], 'pdf');
+
+
+
+outputAntTableMergedJoinedOnlyInfected = outputAntTableMergedJoined(outputAntTableMergedJoined.InfectionLoad > 0,:);
+s1 = figure;
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.OutNestRatio(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), 40, 'filled', 'MarkerFaceColor',colorVector(2,:),'MarkerFaceAlpha', 0.7); 
+hold on
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.OutNestRatio(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), 40, 'filled','MarkerFaceColor',colorVector(4,:),'MarkerFaceAlpha', 0.7); 
+hold off
+[filename, pathname] = uiputfile('*.pdf');
+saveas(s1, [pathname,filename], 'pdf');
+
+s2 = figure;
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.MeanSpeed(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), 40, 'filled', 'MarkerFaceColor',colorVector(2,:),'MarkerFaceAlpha', 0.7); 
+hold on
+scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), ...
+    outputAntTableMergedJoinedOnlyInfected.MeanSpeed(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="X_infected",:), 40, 'filled','MarkerFaceColor',colorVector(4,:),'MarkerFaceAlpha', 0.7); 
+hold off
+[filename, pathname] = uiputfile('*.pdf');
+saveas(s2, [pathname,filename], 'pdf');
