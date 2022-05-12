@@ -46,13 +46,13 @@ panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ```
 
-```{r}
+```{r model for in nest}
+# generalised linear mixed model
 glmerOutNestTreatmentInfectionStatus <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull, family = binomial())
 
 testDispersion(glmerOutNestTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
-Anova(glmerOutNestTreatmentInfectionStatus, type = "II")
 summary(glmerOutNestTreatmentInfectionStatus)
 
 posthocGlmerOutNestTreatmentInfectionStatus <- glht(glmerOutNestTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
@@ -60,21 +60,25 @@ summary(posthocGlmerOutNestTreatmentInfectionStatus)
 par(mar = c(4, 20, 2, 2))
 plot(posthocGlmerOutNestTreatmentInfectionStatus)
 
+# glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatus + (1|ColonyID), data = subset(AntTableFull, TreatmentInfectionStatus == "X_uninfected" | TreatmentInfectionStatus == "X_infected"), family = binomial())
+# summary(glmerOutNestTreatmentInfectionStatusSub1)
+# pValue = c(0.5,0.005,2e-16 )
+# p.adjust(pValue, method = "bonferroni")
 
-lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull,)
+```
+
+```{r model for speed}
+# linear mixed model
+lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull)
 testDispersion(lmerSpeedTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = lmerSpeedTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
-Anova(lmerSpeedTreatmentInfectionStatus)
 summary(lmerSpeedTreatmentInfectionStatus)
 
 posthocLmerSpeedTreatmentInfectionStatus <- glht(lmerSpeedTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
 summary(posthocLmerSpeedTreatmentInfectionStatus)
 
-glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatus + (1|ColonyID), data = subset(AntTableFull, TreatmentInfectionStatus == "X_uninfected" | TreatmentInfectionStatus == "X_infected"), family = binomial())
-summary(glmerOutNestTreatmentInfectionStatusSub1)
-pValue = c(0.5,0.005,2e-16 )
-p.adjust(pValue, method = "bonferroni")
+
 
 ```
 
