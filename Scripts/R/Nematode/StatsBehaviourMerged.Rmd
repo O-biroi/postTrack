@@ -7,6 +7,7 @@ output: html_notebook
 library(tidyverse)
 library(EnvStats)
 library(lme4)
+library(spaMM)
 library(lmerTest)
 library(DHARMa)
 library(car)
@@ -52,13 +53,26 @@ glmerOutNestTreatmentInfectionStatus <- glmer(cbind(OutNestFrame, InNestFrame) ~
 testDispersion(glmerOutNestTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
-Anova(glmerOutNestTreatmentInfectionStatus, type = "II")
+
+Anova(glmerOutNestTreatmentInfectionStatus)
 summary(glmerOutNestTreatmentInfectionStatus)
 
 posthocGlmerOutNestTreatmentInfectionStatus <- glht(glmerOutNestTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
 summary(posthocGlmerOutNestTreatmentInfectionStatus)
 par(mar = c(4, 20, 2, 2))
 plot(posthocGlmerOutNestTreatmentInfectionStatus)
+
+glmerOutNestTreatmentInfectionStatusSub1 <- spaMM::fitme(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1|ColonyID), data = subset(AntTableFull, TreatmentInfectionStatus == "X_uninfected" | TreatmentInfectionStatus == "X_infected"), family = binomial(), method = "PQL")
+summary(glmerOutNestTreatmentInfectionStatusSub1)
+
+#predict gives the predicted value in terms of logits
+plot.dat <- data.frame(prob = AntTableFull$OutNestFrame/AntTableFull$TotalFrame,
+                       fit = predict(glmerOutNestTreatmentInfectionStatusSub1, menarche))
+#convert those logit values to probabilities
+plot.dat$fit_prob <- exp(plot.dat$fit)/(1+exp(plot.dat$fit))
+
+
+
 
 
 lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull,)
@@ -75,6 +89,5 @@ glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatu
 summary(glmerOutNestTreatmentInfectionStatusSub1)
 pValue = c(0.5,0.005,2e-16 )
 p.adjust(pValue, method = "bonferroni")
-
 ```
 
