@@ -1,30 +1,25 @@
 ---
 title: "Statistical analysis for the temporal variation of behaviour"
 output: html_notebook
+editor_options: 
+  chunk_output_type: console
 ---
  
-```{r load packages}
+```{r load packages, echo=FALSE}
 library(tidyverse)
 library(EnvStats)
-library(lme4)
-library(spaMM)
-library(lmerTest)
 library(DHARMa)
-library(car)
 library(multcomp)
-library(EnvStats)
 library(glmmTMB)
 library(multcomp)
-library(spaMM)
 ```
 
 ```{r load data}
-
 AntTable <- read_csv(here::here("Data/outputAntTableMergedJoined.csv"))
 InfectionStatus <- read_delim(here::here("Data/antInfectionStatus.csv"), delim = ";")
 ```
 
-```{r}
+```{r data wrangling}
 left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus", "InfectionLoad", "Treatment")) %>% 
   mutate(
     TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
