@@ -1,16 +1,24 @@
 library(tidyverse)
 
 AntTable <- read_csv("Data/outputAntTableMergedJoined.csv")
-InfectionStatus <- read_delim("Data/antInfectionStatus.csv", delim = ";")
 
-left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus")) %>% 
+AntTable %>% 
   mutate(
     TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
     Treatment = as.factor(Treatment),
     InfectionStatus = as.factor(InfectionStatus)) %>% 
-  filter(TreatmentInfectionStatus != "C_uninfected" & TreatmentInfectionStatus != "X_uninfected") -> AntTableFull
+  filter(TreatmentInfectionStatus != "C_uninfected" & TreatmentInfectionStatus != "X_uninfected") %>%   group_by(ColonyID) %>% 
+  group_by(ColonyID) %>% 
+  arrange(InfectionLoad) %>% 
+  mutate(RankInfectionLoad = row_number(), 
+         RankInfectionLoad = ifelse(InfectionLoad == "NaN", as.numeric(NA), RankInfectionLoad)) %>% 
+  arrange(OutNestRatio) %>% 
+  mutate(RankOutNestRatio = row_number()) %>% 
+  arrange(MeanSpeed) %>% 
+  mutate(RankMeanSpeed = row_number())-> AntTableWithRank
 
-cor.test(AntTableFull$OutNestRatio, AntTableFull$InfectionLoad, method = "spearman", exact = FALSE)
+cor.test(AntTableWithRank$RankOutNestRatio, AntTableFull$RankInfectionLoad, method = "spearman", exact = FALSE)
+cor.test(AntTableWithRank$RankMeanSpeed, AntTableFull$RankInfectionLoad, method = "spearman", exact = FALSE)
 
   ggplot(AntTableFull, aes(color = Treatment)) +
   geom_jitter(aes(x = InfectionLoad, y = OutNestRatio), size = 2) +   
@@ -20,5 +28,4 @@ cor.test(AntTableFull$OutNestRatio, AntTableFull$InfectionLoad, method = "spearm
   theme_light(base_size = 14) +
   theme(legend.position = "bottom") 
 
-  
-  ggsave(file="Results/jitterInfectionLoadOutNest.svg", plot=jitterInfectionLoadOutNest, width=8, height=6)
+ggsave(file="Results/jitterInfectionLoadOutNest.svg", plot=jitterInfectionLoadOutNest, width=8, height=6)
