@@ -7,6 +7,7 @@ output: html_notebook
 library(tidyverse)
 library(EnvStats)
 library(lme4)
+library(spaMM)
 library(lmerTest)
 library(DHARMa)
 library(car)
@@ -83,6 +84,7 @@ testDispersion(glmerOutNestTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
 summary(glmerOutNestTreatmentInfectionStatus)
+Anova(glmerOutNestTreatmentInfectionStatus)
 
 AIC()
 # Conclussion: when analysing binomial data, trials have to be independent (which is not the case for the frames, autocorrelation). 
@@ -102,6 +104,13 @@ plot(posthocGlmerOutNestTreatmentInfectionStatus)
 ```{r model for speed}
 # linear mixed model
 lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull)
+#predict gives the predicted value in terms of logits
+plot.dat <- data.frame(prob = AntTableFull$OutNestFrame/AntTableFull$TotalFrame,
+                       fit = predict(glmerOutNestTreatmentInfectionStatusSub1, menarche))
+#convert those logit values to probabilities
+plot.dat$fit_prob <- exp(plot.dat$fit)/(1+exp(plot.dat$fit))
+
+lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull,)
 testDispersion(lmerSpeedTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = lmerSpeedTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
@@ -110,7 +119,10 @@ summary(lmerSpeedTreatmentInfectionStatus)
 posthocLmerSpeedTreatmentInfectionStatus <- glht(lmerSpeedTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
 summary(posthocLmerSpeedTreatmentInfectionStatus)
 
-
+glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatus + (1|ColonyID), data = subset(AntTableFull, TreatmentInfectionStatus == "X_uninfected" | TreatmentInfectionStatus == "X_infected"), family = binomial())
+summary(glmerOutNestTreatmentInfectionStatusSub1)
+pValue = c(0.5,0.005,2e-16 )
+p.adjust(pValue, method = "bonferroni")
 
 ```
 
