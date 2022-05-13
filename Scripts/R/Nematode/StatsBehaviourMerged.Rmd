@@ -14,6 +14,7 @@ library(multcomp)
 library(EnvStats)
 library(glmmTMB)
 library(multcomp)
+library(spaMM)
 ```
 
 ```{r load data}
@@ -44,16 +45,47 @@ AntTableFull %>%
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
+
+AntTableFull %>% 
+  filter(ColonyID == "X_9" | ColonyID == "T_9" ) -> AntTableFullCrop
+
+AntTableFull %>% 
+  count(TreatmentInfectionStatus)
 ```
 
 ```{r model for in nest}
 # generalised linear mixed model
-glmerOutNestTreatmentInfectionStatus <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull, family = binomial())
+glmerOutNestTreatmentInfectionStatus <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1| ColonyID)
+                                              , data = AntTableFull, family = binomial())
+cov2cor(vcov(glmerOutNestTreatmentInfectionStatus))
+summary(glmerOutNestTreatmentInfectionStatus)
+# random effect compete with 
+
+glmerOutNestTreatmentInfectionStatus <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1| ColonyID), data = AntTableFull, family = beta_family())
+glmerOutNestTreatmentInfectionStatusGaussian <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1| ColonyID), data = AntTableFull, family = gaussian())
+AIC(glmerOutNestTreatmentInfectionStatus, glmerOutNestTreatmentInfectionStatusGaussian)
+
+foo <- vcov(glmerOutNestTreatmentInfectionStatus)
+
+cov2cor(foo[[1]])
+summary(glmerOutNestTreatmentInfectionStatus)
+
+glmOutNestTreatmentInfectionStatus <- glm(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + ColonyID
+                                              , data = AntTableFull, family = binomial())
+cov2cor(vcov(glmOutNestTreatmentInfectionStatus))
+
+glmOutNestTreatmentInfectionStatusCrop <- glm(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus
+                                              , data = AntTableFull, family = binomial())
+cov2cor(vcov(glmOutNestTreatmentInfectionStatusCrop))
+
 
 testDispersion(glmerOutNestTreatmentInfectionStatus)
 simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
 plot(simulationOutput)
 summary(glmerOutNestTreatmentInfectionStatus)
+
+AIC()
+# Conclussion: when analysing binomial data, trials have to be independent (which is not the case for the frames, autocorrelation). 
 
 posthocGlmerOutNestTreatmentInfectionStatus <- glht(glmerOutNestTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
 summary(posthocGlmerOutNestTreatmentInfectionStatus)

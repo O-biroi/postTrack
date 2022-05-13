@@ -12,8 +12,6 @@ left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStat
 
 cor.test(AntTableFull$OutNestRatio, AntTableFull$InfectionLoad, method = "spearman", exact = FALSE)
 
-#jitterInfectionLoadOutNest <- 
-  
   ggplot(AntTableFull, aes(color = Treatment)) +
   geom_jitter(aes(x = InfectionLoad, y = OutNestRatio), size = 2) +   
   scale_color_manual(name = "Colony Treatment", labels = c("Infected", "Mixed"), values = c("T" = "#D95319", "X" = "#7E2F8E")) +
