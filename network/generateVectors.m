@@ -1,4 +1,5 @@
-function infectionsVectors = generateVectors(parameters)
+function infectionsVectors = generateVectors
+    inputsGenerateVec
     segmentLength = parameters.numOfFrames;
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
 i1 = 0;
@@ -6,20 +7,22 @@ i1 = 0;
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
             for ind = 1:parameters.numOfSegments                            % for each segment
-                for inde = parameters.entryPoints                           % for each entry point
+                tic;
+                for inde = 1:parameters.entryPoints                           % for each entry point
                     for index = 1:parameters.numOfReps                      % for each replication
                         fileName = (['infections_Prob' ...
                             num2str(i) 'File' num2str(in) ...
                             'Seg' num2str(ind) 'EP' ...
                             num2str(inde) ...
-                            'Rep' num2str(index)]);
-                        load(fullfile(parameters.outputFolderPath, ...
-                            'temp', fileName), "infectionsTemp");       % load the relevant infection times                                     
+                            'Rep' num2str(index) '.mat']);
+                        load(fullfile(parameters.inputFolder, ...
+                            fileName), "infectionsTemp");       % load the relevant infection times                                     
                         infectionsVectors(i1, in, ind, inde, index, :) = ... % make the vectors
                             makeVector(infectionsTemp.times, ...
                             segmentLength);
                     end
                 end
+                toc;
             end
         end
     end

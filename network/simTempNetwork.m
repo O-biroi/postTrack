@@ -69,7 +69,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
             end
         end
         disp (['finished simulations of file ' num2str(i) ...
-            'in P(infetct) = ' num2str(infectionProb)])
+            ' in P(infetct) = ' num2str(infectionProb)])
         toc
     end
 end
