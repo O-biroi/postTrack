@@ -1,7 +1,7 @@
 clear all
 
-parpool('local', 32)
-inputs2
+parpool('local', 8)
+inputsLocalTest
 
 disp('load');
 tic
@@ -24,14 +24,11 @@ contactsPerAnt = contactRoutesCalc(contactsMat);
 toc
 
 disp('simTempNetwork');
-i = 0;
+
 iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
 for in = iterations
-    disp (['iteration ' num2str(in) ' out of ' num2str(length(iterations))]);
+    disp (['P(infect) = ' num2str(in)]);
     simTempNetwork(contactsPerAnt, in, parameters.entryPoints, parameters.numOfReps, parameters.outputFolderPath);
 end
 
-clearvars i in
-%
-% disp(['saving as: ' fullfile(parameters.outputFolderPath, parameters.fileName)])
-% save(fullfile(parameters.outputFolderPath, parameters.fileName), "infections", "parameters")
+
