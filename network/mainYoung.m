@@ -1,6 +1,6 @@
 clear all
 
-parpool('local', 32)
+parpool('local', 64)
 inputsYoung
 
 disp('load');
