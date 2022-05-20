@@ -7,6 +7,6 @@ parameters.numOfSegments = 32;
 parameters.infectionProbs = [0.001 0.101];
 parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 16;
-parameters.numOfReps = 30;
+parameters.numOfReps = 20;
 
-parameters.inputFolder = '/Volumes/LaCie/outputY';
+parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputO3/';
