@@ -1,6 +1,6 @@
 parameters.time = datetime;
 
-parameters.filePath = '/shares/ulr-lab/users/daniel/networks/youngClean.mat';
+parameters.filePath = '/shares/ulr-lab/users/daniel/networks/mixClean.mat';
 
 parameters.withNest = 1;
 
@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 1:16;
 parameters.numOfReps = 100;
 
-parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/outputY4';
+parameters.outputFmixerPath = '/shares/ulr-lab/Users/Daniel/outputs/outputM4';

@@ -1,7 +1,7 @@
 clear all
 
 parpool('local', 32)
-inputsYoung
+inputsMix
 
 disp('load');
 tic
