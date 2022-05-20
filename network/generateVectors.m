@@ -36,5 +36,3 @@ function vector = makeVector(relevantTimesTemp, segmentLength)
     end
     vector(relevantTimesTemp(end):end) = length(relevantTimesTemp);         % fill the vector from last infection till end with the number of total infections
 end
-
-
