@@ -7,3 +7,5 @@ Scripts/DataExploration/.Rhistory
 .Rproj.user
 
 *.mat
+
+.DS_Store
