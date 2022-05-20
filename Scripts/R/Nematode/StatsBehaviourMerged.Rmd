@@ -14,6 +14,7 @@ library(lme4)
 library(glmmTMB)
 library(multcomp)
 library(oddsratio)
+library(dunn.test)
 ```
 
 ```{r load data}
@@ -115,6 +116,29 @@ glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatu
 summary(glmerOutNestTreatmentInfectionStatusSub1)
 pValue = c(0.5,0.005,2e-16 )
 p.adjust(pValue, method = "bonferroni")
+
+```
+
+```{r test sd }
+AntTableFull %>% 
+  group_by(ColonyID, Treatment) %>% 
+  summarise(SDOutNestRatio = sd(OutNestRatio),
+            SDMeanSpeed = sd(MeanSpeed)) %>% 
+  ungroup() -> ColonyTableFull
+
+ColonyTableFull %>% 
+  ggplot(aes(x = Treatment, y = SDOutNestRatio)) +
+  geom_jitter(aes(color = Treatment), alpha = 0.5) +
+  geom_violin(aes(fill = Treatment, color = Treatment), lwd=0.3, alpha = 0.4) +
+  geom_boxplot(aes(color = Treatment), fill = "white", alpha = 0.7, outlier.shape = NA, width=0.05) +
+  stat_n_text()+
+  theme_bw(base_size = 14) +
+  theme(legend.position = "bottom") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) 
+
+kruskal.test(x = ColonyTableFull$SDOutNestRatio, g = ColonyTableFull$Treatment)
+dunn.test(ColonyTableFull$SDOutNestRatio, ColonyTableFull$Treatment, method = "bonferroni", altp = TRUE, table = TRUE)
 
 ```
 
