@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 1:16;
 parameters.numOfReps = 20;
 
-parameters.outputFmixerPath = '/shares/ulr-lab/Users/Daniel/outputs/outputM4';
+parameters.outputFmixerPath = '/shares/ulr-lab/Users/Daniel/outputs/outputM5';
