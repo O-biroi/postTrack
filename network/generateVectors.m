@@ -1,14 +1,19 @@
-function generateVectors
-    inputsGenerateVecY5
+function generateVectors(inputsFileName)
+    eval(inputsFileName)
     segmentLength = parameters.numOfFrames;
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
-i1 = 0;
+    infectionsVectors = zeros(length(iterations), parameters.numOfFiles, ...
+        parameters.numOfSegments, parameters.entryPoints, ...
+        parameters.numOfReps, segmentLength, "int8");
+    i1 = 0;
+    indeRange = 1:parameters.entryPoints;
+    indexRange = 1:parameters.numOfReps;
     for i = iterations                                                      % for each infection probability
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
             parfor ind = 1:parameters.numOfSegments                         % for each segment
-                for inde = 1:parameters.entryPoints                         % for each entry point
-                    for index = 1:parameters.numOfReps                      % for each replication
+                for inde = indeRange                                        % for each entry point
+                    for index = indexRange                                  % for each replication
                         fileName = (['infections_Prob' ...
                             num2str(i) 'File' num2str(in) ...
                             'Seg' num2str(ind) 'EP' ...
