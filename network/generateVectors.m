@@ -29,7 +29,7 @@ function generateVectors(inputsFileName)
             end
         end
     end
-    save(fullfile(parameters.outputFolder, parameters.fileName), "infectionsVectors" );
+    save(fullfile(parameters.outputFolder, parameters.filename), "infectionsVectors" );
 end
 
 function vector = makeVector(relevantTimesTemp, segmentLength)
