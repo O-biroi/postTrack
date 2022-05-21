@@ -1,6 +1,6 @@
 clear all
 parpool('local', 32)
-parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputO5';
+parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputO5/';
 parameters.time = datetime;
 parameters.numOfFrames = 12000;
 parameters.numOfFiles = 6;

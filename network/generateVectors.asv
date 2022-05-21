@@ -13,16 +13,16 @@ function generateVectors(inputsFileName)
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
             parfor ind = 1:parameters.numOfSegments                         % for each segment
-                disp(["prob " num2str(i) "file " num2str(in) "seg " num2str(ind)])
+                disp(["prob " file " num2str(in) "seg " num2str(ind)])
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
                         fileName = (['infections_Prob' ...
                             num2str(i) 'File' num2str(in) ...
                             'Seg' num2str(ind) 'EP' ...
                             num2str(inde) 'Rep' num2str(index) '.mat']);
-                        times = parload(inputFolder, fileName);
+                        infectionsTemp = parload(inputFolder, fileName);
                         infectionsVectors(i1, in, ind, inde, index, :) = ... % make the vectors
-                            makeVector(times, ...
+                            makeVector(infectionsTemp, ...
                             segmentLength);
                     end
                 end
