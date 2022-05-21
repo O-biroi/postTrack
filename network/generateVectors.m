@@ -1,4 +1,4 @@
-function infectionsVectors = generateVectors
+function generateVectors
     inputsGenerateVec
     segmentLength = parameters.numOfFrames;
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
@@ -6,7 +6,7 @@ i1 = 0;
     for i = iterations                                                      % for each infection probability
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
-            for ind = 1:parameters.numOfSegments                            % for each segment
+            parfor ind = 1:parameters.numOfSegments                            % for each segment
                 for inde = 1:parameters.entryPoints                           % for each entry point
                     for index = 1:parameters.numOfReps                      % for each replication
                         fileName = (['infections_Prob' ...
@@ -23,7 +23,7 @@ i1 = 0;
             end
         end
     end
-    save(parameters.fileName, "infectionsVectors" )
+    save(fullfile(parameters.outputFolder, parameters.fileName), "infectionsVectors" );
 end
 
 function vector = makeVector(relevantTimesTemp, segmentLength)

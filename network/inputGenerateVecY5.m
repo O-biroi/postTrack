@@ -1,6 +1,6 @@
 clear all
-parpool('local', 8)
-parameters.inputFolder = '/Volumes/LaCie/data/Ulrich/tempNetSimulations/outputY3';
+parpool('local', 32)
+parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputY5';
 parameters.time = datetime;
 parameters.numOfFrames = 12000;
 parameters.numOfFiles = 6;
@@ -10,8 +10,8 @@ parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 16;
 parameters.numOfReps = 20;
 
-parameters.outputFolder = '/Users/daniel/Documents/Academia/Post-Ulrich/tests';
-parameters.filename = 'Y3Mat';
+parameters.outputFolder = '/shares/ulr-lab/Users/Daniel/outputs/';
+parameters.filename = 'Y5Mat';
 
 
 
