@@ -4,7 +4,7 @@ function generateVectors(inputsFileName)
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
     infectionsVectors = zeros(length(iterations), parameters.numOfFiles, ...
         parameters.numOfSegments, parameters.entryPoints, ...
-        parameters.numOfReps, segmentLength, "int8");
+        parameters.numOfReps, segmentLength+1, "int8");
     i1 = 0;
     indeRange = 1:parameters.entryPoints;
     indexRange = 1:parameters.numOfReps;
