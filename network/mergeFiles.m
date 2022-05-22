@@ -1,10 +1,10 @@
-function generateVectors(inputsFileName)
+function mergeFiles(inputsFileName)
     eval(inputsFileName)
     segmentLength = parameters.numOfFrames;
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
     infectionsVectors = zeros(length(iterations), parameters.numOfFiles, ...
         parameters.numOfSegments, parameters.entryPoints, ...
-        parameters.numOfReps, segmentLength, "int8");
+        parameters.numOfReps, segmentLength+1, "int8");
     i1 = 0;
     indeRange = 1:parameters.entryPoints;
     indexRange = 1:parameters.numOfReps;
@@ -13,23 +13,23 @@ function generateVectors(inputsFileName)
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
             parfor ind = 1:parameters.numOfSegments                         % for each segment
-                disp(["prob " file " num2str(in) "seg " num2str(ind)])
+                disp(["prob " num2str(i) "file " num2str(in) "seg " num2str(ind)])
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
                         fileName = (['infections_Prob' ...
                             num2str(i) 'File' num2str(in) ...
                             'Seg' num2str(ind) 'EP' ...
                             num2str(inde) 'Rep' num2str(index) '.mat']);
-                        infectionsTemp = parload(inputFolder, fileName);
-                        infectionsVectors(i1, in, ind, inde, index, :) = ... % make the vectors
-                            makeVector(infectionsTemp, ...
-                            segmentLength);
+                        infections = parload(inputFolder, fileName);
+                        infectionsArray{i1, in, ind, inde, index} ...
+                            = infections;
                     end
                 end
             end
         end
     end
-    save(fullfile(parameters.outputFolder, parameters.fileName), "infectionsVectors" );
+    save(fullfile(parameters.outputFolder, parameters.filename), ...
+        "infectionsArray", '-v7.3');
 end
 
 function vector = makeVector(relevantTimesTemp, segmentLength)
@@ -42,6 +42,6 @@ function vector = makeVector(relevantTimesTemp, segmentLength)
 end
 
 function loadedVar = parload(inputFolder, fileName)
-    load(fullfile(inputFolder, fileName), "infectionsTemp");   % load the relevant infection times                                     
-    loadedVar = infectionsTemp.times;
+    load(fullfile(inputFolder, fileName), "infectionsTemp");   % load the relevant infection times
+    loadedVar = infectionsTemp;
 end
