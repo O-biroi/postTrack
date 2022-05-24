@@ -9,3 +9,7 @@ Scripts/DataExploration/.Rhistory
 *.mat
 
 .DS_Store
+
+Scripts/R/Nematode/.Rhistory
+
+.Rhistory

@@ -19,11 +19,10 @@ library(dunn.test)
 
 ```{r load data}
 AntTable <- read_csv(here::here("Data/outputAntTableMergedJoined.csv"))
-InfectionStatus <- read_delim(here::here("Data/antInfectionStatus.csv"), delim = ";")
 ```
 
 ```{r data wrangling}
-left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus", "InfectionLoad", "Treatment")) %>% 
+AntTable %>% 
   mutate(
     TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
     Treatment = as.factor(Treatment),
