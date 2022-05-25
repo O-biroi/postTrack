@@ -14,7 +14,7 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
         parfor in = 1:size(contactsPerAnt, 2)                               % for each segment
             for ind = entryPoints                                         % for each entry point
                 for inde = 1:numOfReps                                      % for each simulation replication
-                    infectionsTemp = [];
+                    infectionsTemp(inde) = [];
                     infectingAntTemp =[];
                     infectedAnts = [];
                     index = [];
@@ -56,17 +56,16 @@ function infections = simTempNetwork(contactsPerAnt, infectionProb, entryPoints,
                     %                     infections{i, in, ind, inde}.infectingAnts = ...
                     %                         infectingAntTemp;
                     %                     infections{i, in, ind, inde}.times = infectionTimesTemp;
-                    infectionsTemp.infectedAnts = infectedAnts;                 % save the infection parameters
-                    infectionsTemp.infectingAnts = infectingAntTemp;
-                    infectionsTemp.times = infectionTimesTemp;
-                    fileNameTemp = ['infections_Prob' num2str(infectionProb) ...
-                        'File' num2str(i) ...
-                        'Seg' num2str(in) 'EP' num2str(ind) ...
-                        'Rep' num2str(inde) '.mat'];
-                    parsave(infectionsTemp, outputFolderTempPath, ...
-                        fileNameTemp)
+                    infectionsTemp(ind, inde).infectedAnts = infectedAnts;                 % save the infection parameters
+                    infectionsTemp(ind, inde).infectingAnts = infectingAntTemp;
+                    infectionsTemp(ind, inde).times = infectionTimesTemp;
                 end
             end
+            fileNameTemp = ['infections_Prob' num2str(infectionProb) ...
+                'File' num2str(i) ...
+                'Seg' num2str(in) '.mat'];
+            parsave(infectionsTemp, outputFolderTempPath, ...
+                fileNameTemp)
         end
         disp (['finished simulations of file ' num2str(i) ...
             ' in P(infetct) = ' num2str(infectionProb)])
