@@ -18,21 +18,21 @@ function mergeFiles2Mat(inputsFileName)
                     num2str(i) 'File' num2str(in) ...
                     'Seg' num2str(ind) '.mat']);
                 infections = parload(inputFolder, fileName);
-                infectionsArrayTemp = nan(length(indeRange), length(indexRange), 3, numOfAnts);
+                infectionsMatTemp = nan(length(indeRange), length(indexRange), 3, numOfAnts);
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
                         lenInf = length(infections(inde, index).infectedAnts);
-                        infectionsArrayTemp(inde, index, 1, 1:lenInf) = infections(inde, index).infectedAnts;
-                        infectionsArrayTemp(inde, index, 2, 1:lenInf) = infections(inde, index).infectingAnts;
-                        infectionsArrayTemp(inde, index, 3, 1:lenInf) = infections(inde, index).times;
+                        infectionsMatTemp(inde, index, 1, 1:lenInf) = infections(inde, index).infectedAnts;
+                        infectionsMatTemp(inde, index, 2, 1:lenInf) = infections(inde, index).infectingAnts;
+                        infectionsMatTemp(inde, index, 3, 1:lenInf) = infections(inde, index).times;
                     end
                 end
-            infectionsMat(i1 ,in, ind, :, :, :, :) = infectionsArrayTemp;
+            infectionsMat(i1 ,in, ind, :, :, :, :) = infectionsMatTemp;
             end
         end
     end
     save(fullfile(parameters.outputFolder, parameters.filename), ...
-        "infectionsArray", '-v7.3');
+        "infectionsMat", '-v7.3');
 end
 
 function vector = makeVector(relevantTimesTemp, segmentLength)
