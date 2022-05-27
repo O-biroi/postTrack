@@ -3,12 +3,11 @@ function mergeFiles2Mat(inputsFileName)
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
     infectionsMat = nan(length(iterations), parameters.numOfFiles, ...
         parameters.numOfSegments, parameters.entryPoints, ...
-        parameters.numOfReps, parameters.numOfAnts);
+        parameters.numOfReps, 3, numOfAnts, 'single');
     i1 = 0;
     indeRange = 1:parameters.entryPoints;
     indexRange = 1:parameters.numOfReps;
     inputFolder = parameters.inputFolder;
-    lengthRelevantData = parameters.numOfAnts;
     for i = iterations                                                      % for each infection probability
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
@@ -18,18 +17,20 @@ function mergeFiles2Mat(inputsFileName)
                     num2str(i) 'File' num2str(in) ...
                     'Seg' num2str(ind) '.mat']);
                 infections = parload(inputFolder, fileName);
+                infectionsArrayTemp = [];
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
-                        infectionsMat(i, in, ind, inde, index, 1, 1:lengthRelevantData) = infections(inde, index).infectedAnts;
-                        infectionsMat(i, in, ind, inde, index, 2, 1:lengthRelevantData) = infections(inde, index).infectingAnts;
-                        infectionsMat(i, in, ind, inde, index, 3, 1:lengthRelevantData) = infections(inde, index).times;
+                        infectionsArrayTemp(inde, index, 1, 1:numOfAnts) = infections(inde, index).infectedAnts;
+                        infectionsArrayTemp(inde, index, 2, 1:numOfAnts) = infections(inde, index).infectingAnts;
+                        infectionsArrayTemp(inde, index, 3, 1:numOfAnts) = infections(inde, index).times;
                     end
                 end
+            infectionsMat(i1 ,in, ind, :, :, :, :) = infectionsArrayTemp;
             end
         end
     end
     save(fullfile(parameters.outputFolder, parameters.filename), ...
-        "infectionsMat", '-v7.3');
+        "infectionsArray", '-v7.3');
 end
 
 function vector = makeVector(relevantTimesTemp, segmentLength)
