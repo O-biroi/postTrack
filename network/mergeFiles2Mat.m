@@ -18,7 +18,7 @@ function mergeFiles2Mat(inputsFileName)
                     num2str(i) 'File' num2str(in) ...
                     'Seg' num2str(ind) '.mat']);
                 infections = parload(inputFolder, fileName);
-                infectionsArrayTemp = nans(length(indeRange), length(indexRange), numOfAnts);
+                infectionsArrayTemp = nan(length(indeRange), length(indexRange), numOfAnts);
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
                         lenInf = length(infections(inde, index).infectedAnts);
