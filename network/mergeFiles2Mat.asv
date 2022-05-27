@@ -21,7 +21,7 @@ function mergeFiles2Mat(inputsFileName)
                     for index = indexRange                                  % for each replication
                         infectionsMat(i, in, ind, inde, index, 1, 1:lengthRelevantData) = infections(inde, index).infectedAnts;
                         infectionsMat(i, in, ind, inde, index, 2, 1:lengthRelevantData) = infections(inde, index).infectingAnts;
-                        infectionsMat(i, in, ind, inde, index, 3, 1:lengthRelevantData) = infections(inde, index).times;
+                        infectionsMat(i, in, ind, inde, index, 3, 1:lengthRelevantData) = infections( in, ind, inde, index}.times;
                     end
                 end
             end
