@@ -21,9 +21,10 @@ function mergeFiles2Mat(inputsFileName)
                 infectionsArrayTemp = [];
                 for inde = indeRange                                        % for each entry point
                     for index = indexRange                                  % for each replication
-                        infectionsArrayTemp(inde, index, 1, 1:numOfAnts) = infections(inde, index).infectedAnts;
-                        infectionsArrayTemp(inde, index, 2, 1:numOfAnts) = infections(inde, index).infectingAnts;
-                        infectionsArrayTemp(inde, index, 3, 1:numOfAnts) = infections(inde, index).times;
+                        lenInf = length(infections(inde, index).infectedAnts);
+                        infectionsArrayTemp(inde, index, 1, 1:lenInf) = infections(inde, index).infectedAnts;
+                        infectionsArrayTemp(inde, index, 2, 1:lenInf) = infections(inde, index).infectingAnts;
+                        infectionsArrayTemp(inde, index, 3, 1:lenInf) = infections(inde, index).times;
                     end
                 end
             infectionsMat(i1 ,in, ind, :, :, :, :) = infectionsArrayTemp;
