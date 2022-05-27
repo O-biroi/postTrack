@@ -5,8 +5,8 @@ parameters.time = datetime;
 parameters.numOfFrames = 12000;
 parameters.numOfFiles = 6;
 parameters.numOfSegments = 32;
-parameters.infectionProbs = [0.001 0.071];
-parameters.infectionProbsJumps = 0.01;
+parameters.infectionProbs = [0.0005 0.001];
+parameters.infectionProbsJumps = 0.0001;
 parameters.entryPoints = 16;
 parameters.numOfAnts = 16;
 
