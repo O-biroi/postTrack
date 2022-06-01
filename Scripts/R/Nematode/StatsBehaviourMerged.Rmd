@@ -1,77 +1,99 @@
 ---
 title: "Statistical analysis for the temporal variation of behaviour"
 output: html_notebook
+editor_options: 
+  chunk_output_type: console
 ---
  
-```{r load packages}
+```{r load packages, echo=FALSE}
 library(tidyverse)
 library(EnvStats)
-library(lme4)
-library(spaMM)
-library(lmerTest)
 library(DHARMa)
-library(car)
 library(multcomp)
-library(EnvStats)
+library(lme4)
 library(glmmTMB)
 library(multcomp)
+library(oddsratio)
+library(dunn.test)
 ```
 
 ```{r load data}
-
 AntTable <- read_csv(here::here("Data/outputAntTableMergedJoined.csv"))
-InfectionStatus <- read_delim(here::here("Data/antInfectionStatus.csv"), delim = ";")
 ```
 
-```{r}
-left_join(AntTable, InfectionStatus, by = c("ColonyID", "Colour", "InfectionStatus", "InfectionLoad", "Treatment")) %>% 
+```{r data wrangling}
+AntTable %>% 
   mutate(
     TreatmentInfectionStatus = as.factor(paste0(Treatment, "_", InfectionStatus)),
     Treatment = as.factor(Treatment),
     InfectionStatus = as.factor(InfectionStatus))  -> AntTableFull
 ```
 
-```{r}
+```{r plotting}
 AntTableFull %>% 
   filter(AssignmentRate > 0.5) %>% 
   ggplot(aes(x = TreatmentInfectionStatus, y = OutNestRatio)) +
   geom_jitter(aes(color = TreatmentInfectionStatus), alpha = 0.5) +
-  geom_violin(aes(fill = TreatmentInfectionStatus), color = "darkgray", lwd=0.3, alpha = 0.4) +
-  geom_boxplot(aes(color = TreatmentInfectionStatus), fill = "darkgray", alpha = 0.7, outlier.shape = NA, width=0.05) +
-  #scale_color_manual(name = "Colony Treatment", labels = c("Infected", "Mixed"), values = c("T" = "#D95319", "X" = "#7E2F8E")) +
+  geom_violin(aes(fill = TreatmentInfectionStatus, color = TreatmentInfectionStatus), lwd=0.3, alpha = 0.4) +
+  geom_boxplot(aes(color = TreatmentInfectionStatus), fill = "white", alpha = 0.7, outlier.shape = NA, width=0.05) +
   stat_n_text()+
   theme_bw(base_size = 14) +
   theme(legend.position = "bottom") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 panel.background = element_blank(), axis.line = element_line(colour = "black"))
-
 ```
 
-```{r model for in nest}
-# generalised linear mixed model
-glmerOutNestTreatmentInfectionStatus <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull, ziformula = ~.)
+```{r statistical models to test the effect of treatment-infection status on out nest ratio}
+# Summary statistics
+AntTableFull %>% 
+  group_by(TreatmentInfectionStatus) %>% 
+  summarise(MeanOutNestRatio = mean(OutNestRatio),
+            SDOutNestRatio = sd(OutNestRatio))
 
-hist(AntTableFull$OutNestRatio)
+# Original model: glmer, family binomial
+# Why it failed: this model treats each frame as independent observation,which is not the case in our data since there is massive correlation of the probability of being in/outside the nests between continuous frames 
+glmerBinomial <- glmer(cbind(OutNestFrame, InNestFrame) ~ TreatmentInfectionStatus + (1| ColonyID) , data = AntTableFull, family = binomial())
+cov2cor(vcov(glmerBinomial)) # correlation X_infected - X_uninfected = 1
+summary(glmerBinomial)
 
-testDispersion(glmerOutNestTreatmentInfectionStatus)
-simulationOutput <- simulateResiduals(fittedModel = glmerOutNestTreatmentInfectionStatus, plot = F)
+# Good model: glmmTMB, family beta
+glmmTMBBeta <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1| ColonyID), data = AntTableFull, family = beta_family())
+foo <- vcov(glmmTMBBeta)
+cov2cor(foo[[1]])
+summary(glmmTMBBeta)
+
+# Compare glmmTMB family gaussian
+glmmTMBGaussian <- glmmTMB(OutNestRatio ~ TreatmentInfectionStatus + (1| ColonyID), data = AntTableFull, family = gaussian())
+
+AIC(glmmTMBBeta, glmmTMBGaussian) # beta does a much better job
+
+
+# Check model hypothesis with Dharma
+testDispersion(glmmTMBBeta)
+simulationOutput <- simulateResiduals(fittedModel = glmmTMBBeta, plot = F)
 plot(simulationOutput)
-summary(glmerOutNestTreatmentInfectionStatus)
-Anova(glmerOutNestTreatmentInfectionStatus)
 
-posthocGlmerOutNestTreatmentInfectionStatus <- glht(glmerOutNestTreatmentInfectionStatus, linfct = mcp(TreatmentInfectionStatus = "Tukey"))
-summary(posthocGlmerOutNestTreatmentInfectionStatus)
+# Post hoc analysis
+posthoc_glmmTMBBeta <- glht(glmmTMBBeta, linfct = mcp(TreatmentInfectionStatus = "Tukey")) 
+summary(posthoc_glmmTMBBeta)
 par(mar = c(4, 20, 2, 2))
-plot(posthocGlmerOutNestTreatmentInfectionStatus)
+plot(posthoc_glmmTMBBeta)
 
-# glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatus + (1|ColonyID), data = subset(AntTableFull, TreatmentInfectionStatus == "X_uninfected" | TreatmentInfectionStatus == "X_infected"), family = binomial())
-# summary(glmerOutNestTreatmentInfectionStatusSub1)
-# pValue = c(0.5,0.005,2e-16 )
-# p.adjust(pValue, method = "bonferroni")
-
+# calculate inverted odds ratio and 95% confidence interval
+exp(coef(posthoc_glmmTMBBeta))
+exp(confint.default(posthoc_glmmTMBBeta, level = 0.95))
 ```
 
-```{r model for speed}
+```{r statistical models to test the effect of treatment-infection status on speed}
+# speed 
+glmmTMBSpeed <- glmmTMB(MeanSpeed ~ TreatmentInfectionStatus + (1| ColonyID), data = AntTableFull, family = gaussian())
+summary(glmmTMBSpeed)
+
+posthoc_glmmTMBSpeed <- glht(glmmTMBSpeed, linfct = mcp(TreatmentInfectionStatus = c("T_infected - C_uninfected = 0", "X_uninfected - C_uninfected = 0","X_infected - T_infected = 0", "X_uninfected - X_infected = 0")))
+summary(posthoc_glmmTMBSpeed)
+par(mar = c(4, 20, 2, 2))
+plot(posthoc_glmmTMBSpeed)
+
 # linear mixed model
 lmerSpeedTreatmentInfectionStatus <- lmer(MeanSpeed ~ TreatmentInfectionStatus + (1|ColonyID), data = AntTableFull)
 #predict gives the predicted value in terms of logits
@@ -93,6 +115,29 @@ glmerOutNestTreatmentInfectionStatusSub1 <- glmer(Mean ~ TreatmentInfectionStatu
 summary(glmerOutNestTreatmentInfectionStatusSub1)
 pValue = c(0.5,0.005,2e-16 )
 p.adjust(pValue, method = "bonferroni")
+
+```
+
+```{r test sd }
+AntTableFull %>% 
+  group_by(ColonyID, Treatment) %>% 
+  summarise(SDOutNestRatio = sd(OutNestRatio),
+            SDMeanSpeed = sd(MeanSpeed)) %>% 
+  ungroup() -> ColonyTableFull
+
+ColonyTableFull %>% 
+  ggplot(aes(x = Treatment, y = SDOutNestRatio)) +
+  geom_jitter(aes(color = Treatment), alpha = 0.5) +
+  geom_violin(aes(fill = Treatment, color = Treatment), lwd=0.3, alpha = 0.4) +
+  geom_boxplot(aes(color = Treatment), fill = "white", alpha = 0.7, outlier.shape = NA, width=0.05) +
+  stat_n_text()+
+  theme_bw(base_size = 14) +
+  theme(legend.position = "bottom") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) 
+
+kruskal.test(x = ColonyTableFull$SDOutNestRatio, g = ColonyTableFull$Treatment)
+dunn.test(ColonyTableFull$SDOutNestRatio, ColonyTableFull$Treatment, method = "bonferroni", altp = TRUE, table = TRUE)
 
 ```
 

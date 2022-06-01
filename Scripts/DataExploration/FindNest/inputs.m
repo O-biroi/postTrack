@@ -20,7 +20,7 @@ parameters.DurationThresh = 20; % prencentile: higher - more interpolation less 
 
 %% Nest area
 % parameters.speedThresh = 20; % prencentile: higher - more nest area
-parameters.nestThresh = 92;%0.4; % change between percentage and relative values in nestAreaCalc at line 14-15
+parameters.nestThresh = 95;%0.4; % change between percentage and relative values in nestAreaCalc at line 14-15
 parameters.smoothSigma = 3; % smooth gaussian std
 parameters.minNestSize = 70; % minimal pixels of a nest - depends on numOfBinsHist %Originally 100
 
