@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 1:8;
 parameters.numOfReps = 100;
 
-parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/outputY5';
+parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/outputAA1';
