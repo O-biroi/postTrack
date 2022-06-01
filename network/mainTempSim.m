@@ -1,4 +1,4 @@
-function mainTempSim('inputsFile')
+function mainTempSim(inputsFile)
 parpool('local', 32)
 eval(inputsFile)
 
