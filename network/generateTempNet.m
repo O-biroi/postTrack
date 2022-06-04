@@ -16,7 +16,7 @@ function generateTempNet(genotype)
             relvantTemp = template{i, in};
             if isempty(relvantTemp)
                 meetingsMat(i, in, :) = {nan};
-                break
+                continue
             end
             parfor ind = 1:numOfNets2Produce
                 for inde = 2:numOfNodes
@@ -28,5 +28,5 @@ function generateTempNet(genotype)
             end
         end
     end
-    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', [genotype 'RandomizedNetworks']))
+    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', [genotype 'RandomizedNetworks']), "meetingsMat")
 end
