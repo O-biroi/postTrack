@@ -1,5 +1,5 @@
 function generateTempNet(genotype)
-    load('/shares/ulr-lab/Users/Daniel/netowrks/contactsMat')
+    load('/shares/ulr-lab/Users/Daniel/netowrks/contactsMat.mat')
     template = eval(genotype);
     numOfSteps = 12000;
     numOfNets2Produce = 10;

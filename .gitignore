@@ -4,3 +4,5 @@
 network/output2/temp/
 
 network/contactMats.mat
+
+*.mat
