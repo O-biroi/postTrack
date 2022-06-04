@@ -15,7 +15,7 @@ function generateTempNet(genotype)
         for in = 1:size(template, 2)
             relvantTemp = template{i, in};
             if isempty(relvantTemp)
-                meetingsMat{i, in, :} = {nan};
+                meetingsMat(i, in, :) = {nan};
                 break
             end
             parfor ind = 1:numOfNets2Produce
