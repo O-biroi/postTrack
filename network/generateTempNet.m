@@ -1,6 +1,6 @@
 function generateTempNet(genotype)
     load('/shares/ulr-lab/Users/Daniel/networks/contactsMat.mat')
-    template = eval(genotype);
+    template = eval(genotype)
     numOfSteps = 12000;
     numOfNets2Produce = 10;
 
@@ -28,5 +28,5 @@ function generateTempNet(genotype)
             end
         end
     end
-    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', [genotype 'RandomizedNetworks']), "meetingsMat")
+    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', [genotype 'RandomizedNetworks.mat']), "meetingsMat")
 end
