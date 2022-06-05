@@ -25,6 +25,7 @@ function generateTempNet(genotype)
                         meetingsMat{i, in, ind}(inde, index, randVec) = 1;
                     end
                 end
+                disp([num2str(i) num2str(in), num2str(ind)]);
             end
         end
     end
