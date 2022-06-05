@@ -29,5 +29,5 @@ function generateTempNet(genotype)
             end
         end
     end
-    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', [genotype 'RandomizedNetworks.mat']), "meetingsMat")
+    save(fullfile('/shares/ulr-lab/Users/Daniel/output/', append(genotype, 'RandomizedNetworks.mat')), "meetingsMat")
 end
