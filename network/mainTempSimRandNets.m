@@ -2,9 +2,11 @@ function mainTempSimRandNets(inputsFile)
 parpool('local', 32)
 eval(inputsFile)
 
+load(parameters.filePath)
+
 disp('contactRoutesCalc');
 tic
-contactsPerAnt = contactRoutesCalc(contactsMat);
+contactsPerAnt = contactRoutesCalc(meetingsMatNew);
 toc
 
 disp('simTempNetwork');
