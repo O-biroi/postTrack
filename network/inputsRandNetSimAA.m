@@ -1,6 +1,6 @@
 parameters.time = datetime;
 
-parameters.filePath = '/shares/ulr-lab/users/daniel/networks/outputs/AARandomizedNetworksReorg.mat';
+parameters.filePath = '/shares/ulr-lab/Users/Daniel/outputs/AARandomizedNetworksReorg.mat';
 
 % parameters.withNest = 1;
 
