@@ -6,7 +6,7 @@ function generateTempNet(genotype)
 
     parpool('local', numOfNets2Produce)
 
-    numOfNodes = size(template{1, 1}, 1);
+    numOfNodes = size(template{find(~cellfun(@isempty, template), 1, 'first')}, 1);
     emptyMat = zeros([numOfNodes, numOfNodes, numOfSteps], "logical");
     meetingsMat = cell(size(template, 1), size(template, 2), numOfNets2Produce);
     meetingsMat(cellfun(@isempty, meetingsMat)) = {emptyMat};
