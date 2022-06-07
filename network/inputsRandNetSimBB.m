@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.0001;
 parameters.entryPoints = 1:8;
 parameters.numOfReps = 10;
 
-parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/simBBRandomizedNetworksReorg';
+parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/simBBRandomizedNetworksReorg2';
