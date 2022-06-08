@@ -27,11 +27,8 @@ function generateTempNet(genotype)
                 end
                 disp([num2str(i) num2str(in), num2str(ind)]);
             end
-            for ind = 1:numOfNets2Produce
-                index1 = (i - 1) * numOfNets2Produce + ind;
-                meetingsMatNew(index1, :) = meetingsMat(i, :, ind);
-            end
+            i * ind +ind
         end
     end
-    save(fullfile('/shares/ulr-lab/Users/Daniel/outputs/', append(genotype, 'RandomizedNetworks.mat')), 'meetingsMatNew')
+    save(fullfile('/shares/ulr-lab/Users/Daniel/outputs/', append(genotype, 'RandomizedNetworks.mat')), "meetingsMatNew")
 end
