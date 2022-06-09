@@ -1,7 +1,7 @@
 function contactsPerAnt = contactRoutesCalc(contactsMat)
 
-    numOfAnts = size(contactsMat{1}(:,:,1), 1);
-
+%     numOfAnts = size(contactsMat{1}(:,:,1), 1);
+    numOfAnts = size(contactsMat{find(~cellfun(@isempty, contactsMat), 1, 'first')}(:,:,1), 1);
     %% Generate masking matrices
     % for working only on one copy of couples - the lower part of the
     % contactsMat.
