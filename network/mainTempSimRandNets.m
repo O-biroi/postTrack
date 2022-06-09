@@ -1,5 +1,5 @@
 function mainTempSimRandNets(inputsFile)
-parpool('local', 32)
+parpool('local', 16)
 eval(inputsFile)
 
 load(parameters.filePath)
