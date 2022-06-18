@@ -1,7 +1,6 @@
-clear all
-
+function mainTempSimCombi(inputsFile)
 parpool('local', 10)
-inputsOldCombi
+eval(inputsFile)
 
 disp('load');
 tic
