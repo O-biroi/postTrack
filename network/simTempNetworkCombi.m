@@ -30,7 +30,7 @@ function infections = simTempNetworkCombi(contactsPerAnt, infectionProb, numOfRe
                         infectedContacts = [infectedContacts; infectedContactsTemp];
                     end
                     infectedContacts = sortrows(infectedContacts);
-                    infectionTimesTemp = zero(1, length(infectedAnts));                                 % first infection is at 0 time for the entry point
+                    infectionTimesTemp = zeros(1, length(infectedAnts));                                 % first infection is at 0 time for the entry point
                     infectingAntTemp = nan(1, length(infectedAnts));                                 % first infection is not caused by another infecting ant - therfore nan
                     index = 1;                                              % start an index variable
                     while index <= size(infectedContacts, 1) && ...
