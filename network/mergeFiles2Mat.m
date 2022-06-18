@@ -45,6 +45,6 @@ function vector = makeVector(relevantTimesTemp, segmentLength)
 end
 
 function loadedVar = parload(inputFolder, fileName)
-    load(fullfile(inputFolder, fileName), "infectionsTemp");   % load the relevant infection times
+    load(fullfile(inputFolder, fileName), "infectionsTemp");                % load the relevant infection times
     loadedVar = infectionsTemp;
 end
