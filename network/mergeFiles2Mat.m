@@ -14,7 +14,7 @@ function mergeFiles2Mat(inputsFileName)
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
             parfor ind = 1:length(segments)                         % for each segment
-                seg = ind;
+                seg = segments(ind);
                 disp(['prob ' num2str(i) 'file ' num2str(in) 'seg ' num2str(ind)])
                 fileName = (['infections_Prob' ...
                     num2str(i) 'File' num2str(in) ...
