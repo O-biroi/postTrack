@@ -13,7 +13,10 @@ function infections = simTempNetworkCombi(contactsPerAnt, infectionProb, numOfRe
         tic
         parfor in = 1:size(contactsPerAnt, 2)                               % for each segment
             infectionsTemp = [];
-            entryPoints = randi(16, [20, 5]);
+            entryPoints = [];
+            for ii = 1:20
+                entryPoints(ii, :) = randperm(16, 5);
+            end
             for ind = 1:size(entryPoints, 1)                                         % for each entry point
                 for inde = 1:numOfReps                                      % for each simulation replication
 %                     infectionsTemp(inde) = [];
