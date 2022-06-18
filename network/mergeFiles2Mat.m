@@ -1,9 +1,10 @@
 function mergeFiles2Mat(inputsFileName)
     eval(inputsFileName)
     numOfAnts = parameters.numOfAnts;
+    segments = parameters.numOfSegments;
     iterations = parameters.infectionProbs(1):parameters.infectionProbsJumps:parameters.infectionProbs(end);
     infectionsMat = nan(length(iterations), parameters.numOfFiles, ...
-        length(parameters.numOfSegments), parameters.entryPoints, ...
+        length(segments), parameters.entryPoints, ...
         parameters.numOfReps, 3, numOfAnts, 'single');
     i1 = 0;
     indeRange = 1:parameters.entryPoints;
@@ -12,8 +13,8 @@ function mergeFiles2Mat(inputsFileName)
     for i = iterations                                                      % for each infection probability
         i1 = i1+1;
         for in = 1:parameters.numOfFiles                                    % for each file
-            parfor ind = 1:length(parameters.numOfSegments)                         % for each segment
-                seg = parameters.numOfSegments(ind);
+            parfor ind = 1:length(segments)                         % for each segment
+                seg = segments(ind);
                 disp(['prob ' num2str(i) 'file ' num2str(in) 'seg ' num2str(ind)])
                 fileName = (['infections_Prob' ...
                     num2str(i) 'File' num2str(in) ...

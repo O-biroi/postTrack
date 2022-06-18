@@ -1,5 +1,5 @@
 clear all
-parpool('local', 11)
+% parpool('local', 11)
 parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputCM1';
 parameters.time = datetime;
 parameters.numOfFrames = 12000;
