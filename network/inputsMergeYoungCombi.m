@@ -1,6 +1,6 @@
 clear all
 parpool('local', 11)
-parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputCY1';
+parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputCY2';
 parameters.time = datetime;
 parameters.numOfFrames = 12000;
 parameters.numOfFiles = 6;
@@ -12,7 +12,7 @@ parameters.numOfAnts = 16;
 parameters.numOfReps = 20;
 
 parameters.outputFolder = '/shares/ulr-lab/Users/Daniel/outputs/';
-parameters.filename = 'CY1Array';
+parameters.filename = 'CY2Array';
 
 
 
