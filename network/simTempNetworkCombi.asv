@@ -27,11 +27,10 @@ function infections = simTempNetworkCombi(contactsPerAnt, infectionProb, numOfRe
                     for infectedAnt = 1:length(infectedAnts)
                         infectedContactsTemp = contactsPerAnt{i, in, infectedAnt};             % gather the contacts of the entry point ant
                         infectedContactsTemp(:, 3) = infectedAnt;                  % add the infected ant to the third col
-                        infectedContacts = [infectedContacts; infectedContactsTemp];
+                        infectedContacts = [inf]
                     end
-                    infectedContacts = sortrows(infectedContacts);
-                    infectionTimesTemp = zero(1, length(infectedAnts));                                 % first infection is at 0 time for the entry point
-                    infectingAntTemp = nan(1, length(infectedAnts));                                 % first infection is not caused by another infecting ant - therfore nan
+                    infectionTimesTemp = 0;                                 % first infection is at 0 time for the entry point
+                    infectingAntTemp = nan;                                 % first infection is not caused by another infecting ant - therfore nan
                     index = 1;                                              % start an index variable
                     while index <= size(infectedContacts, 1) && ...
                             length(infectedAnts) <= numOfAnts               % run the simulation as long as there are more contacts and more susceptible ants.
