@@ -1,5 +1,5 @@
 function mainTempSimCombi(inputsFile)
-parpool('local', 10)
+parpool('local', 11)
 eval(inputsFile)
 
 disp('load');
