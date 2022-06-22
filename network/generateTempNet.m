@@ -18,12 +18,12 @@ function generateTempNet(genotype)
                 meetingsMat(i, in, :) = {nan};
                 continue
             end
-            parfor ind = 1:numOfNets2Produce
+            for ind = 1:numOfNets2Produce
                 for inde = 2:numOfNodes
                     for index = 1:inde-1
                         randVec = randperm(numOfSteps, [size(relvantTemp, 3), 1]);
                         if isempty(randVec)
-                            meetingsMat{i, in, ind}(inde, index, :) = 0
+                            meetingsMat{i, in, ind}(inde, index, :) = 0;
                         end
                         meetingsMat{i, in, ind}(inde, index, randVec) = 1;
                     end
