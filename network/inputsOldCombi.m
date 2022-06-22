@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.01;
 parameters.entryPoints = 1:16;
 parameters.numOfReps = 20;
 
-parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/outputCO3';
+parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/outputCO4';
