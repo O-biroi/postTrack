@@ -1,6 +1,6 @@
 function generateTempNetAge(age)
     load('/shares/ulr-lab/Users/Daniel/networks/contactsMatAge.mat')
-    template = eval(genotype)
+    template = eval(age)
     numOfSteps = 12000;
     numOfNets2Produce = 10;
 
