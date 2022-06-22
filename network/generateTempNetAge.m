@@ -33,5 +33,5 @@ function generateTempNetAge(age)
             end
         end
     end
-    save(fullfile('/shares/ulr-lab/Users/Daniel/outputs/', append(genotype, 'RandomizedNetworks.mat')), 'meetingsMatNew')
+    save(fullfile('/shares/ulr-lab/Users/Daniel/outputs/', append(age, 'RandomizedNetworks.mat')), 'meetingsMatNew')
 end
