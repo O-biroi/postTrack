@@ -5,8 +5,8 @@ eval(inputsFile)
 disp('load');
 tic
 load(parameters.filePath);
-xy = xy(:, 22:32);
-inNest = inNest(:, 22:32);
+xy = xy(:, 1:11);
+inNest = inNest(:, 1:11);
 toc
 
 disp('distancesClac');
