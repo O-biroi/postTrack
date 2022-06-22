@@ -1,6 +1,6 @@
 parameters.time = datetime;
 
-parameters.filePath = '/shares/ulr-lab/Users/Daniel/outputs/AARandomizedNetworksReorg.mat';
+parameters.filePath = '/shares/ulr-lab/Users/Daniel/outputs/mixRandomizedNetworks.mat';
 
 % parameters.withNest = 1;
 
@@ -11,4 +11,4 @@ parameters.infectionProbsJumps = 0.0001;
 parameters.entryPoints = 1:8;
 parameters.numOfReps = 5;
 
-parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/simAARandomizedNetworksReorg2';
+parameters.outputFolderPath = '/shares/ulr-lab/Users/Daniel/outputs/simMixRandomizedNetworks';
