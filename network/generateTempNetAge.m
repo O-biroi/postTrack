@@ -21,7 +21,7 @@ function generateTempNetAge(age)
             parfor ind = 1:numOfNets2Produce
                 for inde = 2:numOfNodes
                     for index = 1:inde-1
-                        randVec = randperm(numOfSteps, [size(relvantTemp, 3)]);
+                        randVec = randperm(numOfSteps, sum(relvantTemp(inde, index, :), 3));
                         meetingsMat{i, in, ind}(inde, index, randVec) = 1;
                     end
                 end
