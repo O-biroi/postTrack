@@ -1,6 +1,6 @@
 clear all
-parpool('local', 32)
-parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputLL2';
+parpool('local', 16)
+parameters.inputFolder = '/shares/ulr-lab/Users/Daniel/outputs/outputLL3';
 parameters.time = datetime;
 parameters.numOfFrames = 12000;
 parameters.numOfFiles = 6;
@@ -12,7 +12,7 @@ parameters.numOfAnts = 8;
 parameters.numOfReps = 100;
 
 parameters.outputFolder = '/shares/ulr-lab/Users/Daniel/outputs/';
-parameters.filename = 'LL2Mat';
+parameters.filename = 'LL3Mat';
 
 
 

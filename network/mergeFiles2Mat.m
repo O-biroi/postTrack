@@ -12,7 +12,7 @@ function mergeFiles2Mat(inputsFileName)
     inputFolder = parameters.inputFolder;
     for i = iterations                                                      % for each infection probability
         i1 = i1+1;
-        for in = 1:parameters.numOfFiles                                    % for each file
+        parfor in = 1:parameters.numOfFiles                                    % for each file
             for ind = 1:length(segments)                         % for each segment
                 seg = ind;
                 disp(['prob ' num2str(i) 'file ' num2str(in) 'seg ' num2str(ind)])
