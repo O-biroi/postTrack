@@ -25,6 +25,6 @@ inNest = inNestCalc(xy2, nestBoundaries);
 
 
 %% Copy NaNs to inNest
-inNestWithNansRaw = copyNans(xy, inNest); 
+inNestWithNansRaw = copyNans(xy2, inNest); 
 %%Save results
 % saveInterpolation(xy2, parameters.saveXY2, names, inNest, IDs, data);

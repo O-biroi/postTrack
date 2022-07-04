@@ -51,7 +51,7 @@ speedSplitByDayMaskInNestMaskImpSpeed = splitMergedXys(speedMergedMaskInNestMask
 
 % load experiment information
 run("loadInfectionStatus.m"); 
-
+%%
 % produce output table
 outputAntTableMerged = makeOutputAntTable(xy2Merged, inNestWithNansMerged, speedMergedMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
 outputAntTableByDay = makeOutputAntTable(xy2SplitByDay, inNestWithNansSplitByDay, speedSplitByDayMaskInNestMaskImpSpeed, parameters.numOfAnts, parameters.colonyID , parameters.antColour);
@@ -91,13 +91,12 @@ ylabel("Ratio of time being outside the nest")
 [filename, pathname] = uiputfile('*.svg');
 saveas(v2, [pathname,filename], 'svg');
 
-
+%%
 v3 = figure;
 violinplot(outputAntTableMergedJoined.MeanSpeed, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
 xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
 [filename, pathname] = uiputfile('*.pdf');
 saveas(v3, [pathname,filename], 'pdf');
-
 
 outputAntTableMergedJoinedOnlyInfected = outputAntTableMergedJoined(outputAntTableMergedJoined.InfectionLoad > 0,:);
 s1 = figure;
