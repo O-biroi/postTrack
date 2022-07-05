@@ -98,6 +98,8 @@ xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected',
 [filename, pathname] = uiputfile('*.pdf');
 saveas(v3, [pathname,filename], 'pdf');
 
+%%
+
 outputAntTableMergedJoinedOnlyInfected = outputAntTableMergedJoined(outputAntTableMergedJoined.InfectionLoad > 0,:);
 s1 = figure;
 scatter(outputAntTableMergedJoinedOnlyInfected.InfectionLoad(outputAntTableMergedJoinedOnlyInfected.ColonyTreatmentAntInfectionStatus=="T_infected",:), ...
