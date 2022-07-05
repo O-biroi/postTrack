@@ -95,8 +95,8 @@ saveas(v2, [pathname,filename], 'svg');
 v3 = figure;
 violinplot(outputAntTableMergedJoined.MeanSpeed, outputAntTableMergedJoined.ColonyTreatmentAntInfectionStatus, 'ViolinColor', colorVector);
 xticklabels({'Uninfected - uninfected','Infected - infected','Mix - uninfected', 'Mix - infected'})
-[filename, pathname] = uiputfile('*.pdf');
-saveas(v3, [pathname,filename], 'pdf');
+[filename, pathname] = uiputfile('*.svg');
+saveas(v3, [pathname,filename], 'svg');
 
 %%
 
