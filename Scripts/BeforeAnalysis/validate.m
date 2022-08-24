@@ -1,3 +1,6 @@
 clear all
-Trck=trhandles('/Volumes/Nema/Nema_2/cam4')
-validate_tracking(Trck, 'ti', 1, 'tf',360000 );
+Trck=trhandles('~/Desktop/idol/idol_cam10/')
+startVideo = 1;
+endVideo = 20;
+
+validate_tracking(Trck, 'ti', 6001, 'tf',6002 );
