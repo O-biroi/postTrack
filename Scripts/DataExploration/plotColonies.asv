@@ -5,7 +5,7 @@ parameters.folderPath ='/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/all';
 parameters.numOfFiles = 8;
 parameters.firstFile = 1;
 parameters.numOfAnts = 10;
-antColor = ["BG","BO","GB","GP","OB","OG","OP","PB","PG","PO"];
+
 %parameters.segment = 6000 * 3; % number of frames in one "day"
 %parameters.arenaSize = 0.05; % size of circular arena (in meters)
 %parameters.lastframe = 864000;
@@ -21,16 +21,10 @@ end
 
 %%
 loadSurvival;
-% make color value
+% make color values
 survival.colonyID = categorical(append("cam", survival.camera, "_", survival.colonyCam,"_",survival.colony));
 survival.antID = categorical(append(string(survival.colonyID), "_", string(survival.color)));
-survivalSorted = sortrows(survival, ["colonyID", "minutesSurvival"]);
 
-numOfColonies = length(unique(findgroups(survivalSorted.colonyID)));
-survivalSorted.rank = (repmat(1:numAnts,1,colonies))';
-
-
-%%
 cvars = survival.minutesSurvival;
 n = max(cvars)-min(cvars) + 1;
 survival.cvars_map = int16((cvars - min(cvars))/(max(cvars)-min(cvars)) * (n-1) + 1);
@@ -38,22 +32,16 @@ cmap = winter(n);
 
 for i = 1:size(survival,1)
     if survival.cvars_map(i) == 0
-        survival.rgb(i) = {[0 0 0]}; % special color for those that does not have survival information
-    elseif survival.survivalEnd(i) == "Alive"
-        survival.rgb(i) = {[0.6706 0.9686 0.3882]}; % special color for those who stayed alive until the end
+        survival.rgb(i) = {[0 0 0]};
     else
     survival.rgb(i) = {cmap(survival.cvars_map(i),:)};
     end
 end
 
-survival.hrsSurvival = survival.minutesSurvival/60;
 figure;
-scatter(survival, 'colonyID', 'hrsSurvival', 'filled','ColorVariable','hrsSurvival');
-colorbar;
+scatter(survival, 'colonyID', 'minutesSurvival', 'ColorVariable','minutesSurvival','fill');
+colorbar
 colormap(cmap);
-saveas(gcf,'/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/all/colorbar.png')
-
-
 %% Produces figures
 figure;
 x0=10;
@@ -76,13 +64,11 @@ for i = 1:8
             ylim_max = max(max(xyMatrix(:,2:2:2*numAnts)));
      end
      for j = 1:numAnts
-        antID = append(string(colonyID{i}), "_", antColor(j));
-        rgb = survival.rgb{survival.antID == antID};
         subplot(10,numAnts, (i-1)*numAnts+j); % make numFile*maxNumAnts grid plot
         x= xyMatrix(:,2*j-1);
         y = xyMatrix(:,2*j);
         % assignment rate
-        scatter(x, y, 1, rgb, 'filled'); % set color as the rgb color
+        scatter(x, y, 1, survival.rgb{(i-1)*numAnts+j}, 'filled'); % set color as the rgb color
         axis ij;
         xlim([xlim_min,xlim_max]);
         ylim([ylim_min,ylim_max]);

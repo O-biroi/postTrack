@@ -1,7 +1,7 @@
 clear
-rootDirPath = '/Volumes/Nema/Nema_2/cam4/antrax/antdata';
-numOfVideos = 238 ; %set the expected number of videos
-numOfAnts = 8;
+rootDirPath = '/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/idol_cam10_com';
+numOfVideos = 288 ; %set the expected number of videos
+numOfAnts = 10;
 emptyMatrix = nan(6000, 4);
 
 list1 = dir(rootDirPath); % get the directory information of all the items the root path
