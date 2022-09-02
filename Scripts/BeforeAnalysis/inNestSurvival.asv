@@ -1,0 +1,56 @@
+% run it section by section
+clear;
+%% read parameters
+parameters.rootPath ='/Volumes/Zim_Private/idol/';
+parameters.antColour = ["BG","BO","GB","GP","OB","OG","OP","PB","PG","PO"];
+files=dir(fullfile(strcat(parameters.rootPath, '/all/inNest'), '*.mat')); %find all the mat files
+parameters.numCam = size(files,1);
+parameters.numOfAnts = 10;
+parameters.totalAnts = 80;
+
+%%
+for i = 1:parameters.numCam
+    names{i} = files(i,:).name;
+    splitNames{i} = split(string(names{i}),["_","."]);
+    cameras{i} = splitNames{i}(2);
+end
+%%
+sz = parameters.totalAnts;
+vars = {'camera','colonyCam','colour','assignmentRate','inNestFrame', 'outNestFrame', 'totalFrame', 'outNestRatio'};
+varTypes = {'categorical','categorical','categorical','double','double', 'double', 'double','double'};
+outputAntTable = table('Size',[sz,length(vars)], 'VariableTypes', varTypes, 'VariableNames', vars);
+%%
+inNest = load(fullfile(files(1,:).folder,files(1,:).name)).inNest;
+frames = size(inNest, 1);
+nanNum = sum(isnan(inNest));
+assignmentRate =  1 - nanNum ./ frames;
+sumInNest = nansum(inNest);
+inNestRate = sumInNest./(frames - nanNum);
+outNestRate = 1 - inNestRate;
+numColony = size(inNest,2)/parameters.numOfAnts;
+
+%%
+for i = 1:parameters.numCam
+    inNest = load(fullfile(files(i,:).folder,files(i,:).name)).inNest;
+    frames = size(inNest, 1);
+    numColony = size(inNest,2)/parameters.numOfAnts;
+    nanNum = sum(isnan(inNest));
+    totalFrames = frames - nanNum;
+    assignmentRate =  1 - nanNum ./ frames;
+    sumInNest = nansum(inNest);
+    inNestRate = sumInNest./(frames - nanNum);
+    outNestRate = 1 - inNestRate;
+    for j = 1:numColony
+        for k = 1:parameters.numOfAnts
+            numRow = (i-1)*numColony + (j-1)*parameters.numOfAnts +k;
+            outputAntTable.camera(numRow) = cameras{i};
+            outputAntTable.colonyCam(numRow) = j;
+            outputAntTable.colour(numRow) = parameters.antColour(k);
+            outputAntTable.assignmentRate(numRow) = assignmentRate((j-1)*parameters.numOfAnts +k);
+            outputAntTable.assignmentRate(numRow) = assignmentRate((j-1)*parameters.numOfAnts +k);
+            outputAntTable.assignmentRate(numRow) = assignmentRate((j-1)*parameters.numOfAnts +k);
+        end
+    end
+end
+
+cameras(1)

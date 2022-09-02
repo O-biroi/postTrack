@@ -1,16 +1,13 @@
 % run it section by section
 clear;
 %% read parameters
-parameters.rootPath ='/Volumes/Zim_Private/idol'; %Macbook
-parameters.camera = 'cam10';
-parameters.folderpath= strcat(parameters.rootPath,'/idol_',parameters.camera, '_com');
+parameters.folderPath ='/Volumes/Zim_Private/idol/all'; %Macbook
 parameters.background = imread(strcat(parameters.folderPath,'/background.png'));
 parameters.numColoniesPerCam = 4;
 parameters.geometryRscale = 0.0000595382896799795; % change for every folder
 parameters.numOfAnts = 10;
 files=dir(fullfile(parameters.folderPath,'*.mat')); %find all the mat files
 files = files(~startsWith({files.name}, '.'));
-files = files(startsWith({files.name}, 'xy'));
 
 %% make ellipse (interactive, do not close the image window)
 imshow(parameters.background);
@@ -46,8 +43,8 @@ for i = 1:frames
     end
 end
 %% save files 
-save(strcat(parameters.rootPath, '/all/nestMask/nestMask_',parameters.camera,'.mat'), 'mask');
-save(strcat(parameters.rootPath, '/all/inNest/inNest_',parameters.camera,'.mat'), 'inNest');
+save(strcat(parameters.folderPath, '/mask.mat'), 'mask');
+save(strcat(parameters.folderPath, '/inNest.mat'), 'inNest');
 
 %plot(p4(1), p4(2), 'r+', 'MarkerSize', 30, 'LineWidth', 2)
 %pdist2(X,Y,'euclidean')

@@ -22,12 +22,12 @@ end
 %%
 loadSurvival;
 % make color value
-survival.colonyID = categorical(append("cam", survival.camera, "_", survival.colonyCam,"_",survival.colony));
+survival.colonyID = categorical(append(survival.camera, "_", survival.colonyCam,"_",survival.colony));
 survival.antID = categorical(append(string(survival.colonyID), "_", string(survival.color)));
-survivalSorted = sortrows(survival, ["colonyID", "minutesSurvival"]);
+% survivalSorted = sortrows(survival, ["colonyID", "minutesSurvival"]);
 
-numOfColonies = length(unique(findgroups(survivalSorted.colonyID)));
-survivalSorted.rank = (repmat(1:numAnts,1,colonies))';
+% numOfColonies = length(unique(findgroups(survivalSorted.colonyID)));
+% survivalSorted.rank = (repmat(1:numAnts,1,colonies))';
 
 
 %%
