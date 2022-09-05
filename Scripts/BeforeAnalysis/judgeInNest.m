@@ -1,36 +1,54 @@
+% run it section by section
 clear;
-background = imread('/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/idol_cam9_com/background.png');
-imshow(background);
-numColonies = 4;
-mask = zeros([1944 2592]);
+%% read parameters
+parameters.rootPath ='/Volumes/Zim_Private/idol'; %Macbook
+parameters.camera = 'cam10';
+parameters.folderpath= strcat(parameters.rootPath,'/idol_',parameters.camera, '_com');
+parameters.background = imread(strcat(parameters.folderPath,'/background.png'));
+parameters.numColoniesPerCam = 4;
+parameters.geometryRscale = 0.0000595382896799795; % change for every folder
+parameters.numOfAnts = 10;
+files=dir(fullfile(parameters.folderPath,'*.mat')); %find all the mat files
+files = files(~startsWith({files.name}, '.'));
+files = files(startsWith({files.name}, 'xy'));
 
-for i=1:numColonies
-    e(i) = drawellipse();
-    m = createMask(e(i));
+%% make ellipse (interactive, do not close the image window)
+imshow(parameters.background);
+for i=1:parameters.numColoniesPerCam
+   e(i) = drawellipse();
+end
+%% making mask
+mask = zeros(1944,2592);
+for i=1:parameters.numColoniesPerCam
+ m = createMask(e(i));
     mask = mask + m;
 end
+maskImage = figure,imshow(mask);
+%% modify xy into pixels
+for colony = 1:parameters.numColoniesPerCam
+    xyCamera{1,colony} = load(fullfile(files(colony,:).folder,files(colony,:).name)).xy;
+end
+xyCam = cell2mat(xyCamera);
+%% covert xy into pixels
+% xy = load(fullfile(files(1,:).folder,files(1,:).name)).xy;
+xyCamInPixel = round(xyCam ./ parameters.geometryRscale);
+frames = size(xyCamInPixel, 1);
+inNest = zeros(frames, parameters.numOfAnts);
 
-figure,imshow(mask)
-%%
+%% product in Nest file
+for i = 1:frames
+    for j = 1:parameters.numOfAnts*parameters.numColoniesPerCam
+        if isnan(xyCamInPixel(i,j*2-1))
+            inNest(i,j) = nan;
+        else
+            inNest(i,j) = mask(xyCamInPixel(i,j*2), xyCamInPixel(i,j*2-1)); % pay attention x y change sequence
+        end
+    end
+end
+%% save files 
+save(strcat(parameters.rootPath, '/all/nestMask/nestMask_',parameters.camera,'.mat'), 'mask');
+save(strcat(parameters.rootPath, '/all/inNest/inNest_',parameters.camera,'.mat'), 'inNest');
 
-p2 = [134 690]
-
-p = [968 1398];
-p2 = [134 690];
-p3 = [2458 1674];
-p4 = [0.0681689828634262,0.0401655063033104]./geometry_rscale
-
-
-h = drawellipse()
-plot(p4(1), p4(2), 'r+', 'MarkerSize', 30, 'LineWidth', 2)
-inROI(h, p4(1), p4(2))
-
-geometry_rscale = 5.742642398931502E-5;
-p3*geometry_rscale 
-
-
-
-X = [1055.4967845659164,667.59967845659094];
-Y = [1216.6286173633439,873.181672025723];
-pdist2(X,Y,'euclidean')
+%plot(p4(1), p4(2), 'r+', 'MarkerSize', 30, 'LineWidth', 2)
+%pdist2(X,Y,'euclidean')
 

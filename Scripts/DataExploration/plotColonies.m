@@ -5,7 +5,7 @@ parameters.folderPath ='/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/all';
 parameters.numOfFiles = 8;
 parameters.firstFile = 1;
 parameters.numOfAnts = 10;
-antColor = ["BG","BO","GB","GP","OB","OG","OP","PB","PG","PO"];
+antColour = ["BG","BO","GB","GP","OB","OG","OP","PB","PG","PO"];
 %parameters.segment = 6000 * 3; % number of frames in one "day"
 %parameters.arenaSize = 0.05; % size of circular arena (in meters)
 %parameters.lastframe = 864000;
@@ -22,12 +22,12 @@ end
 %%
 loadSurvival;
 % make color value
-survival.colonyID = categorical(append("cam", survival.camera, "_", survival.colonyCam,"_",survival.colony));
-survival.antID = categorical(append(string(survival.colonyID), "_", string(survival.color)));
-survivalSorted = sortrows(survival, ["colonyID", "minutesSurvival"]);
+survival.colonyID = categorical(append(survival.camera, "_", survival.colonyCam,"_",survival.colony));
+survival.antID = categorical(append(string(survival.colonyID), "_", string(survival.colour)));
+% survivalSorted = sortrows(survival, ["colonyID", "minutesSurvival"]);
 
-numOfColonies = length(unique(findgroups(survivalSorted.colonyID)));
-survivalSorted.rank = (repmat(1:numAnts,1,colonies))';
+% numOfColonies = length(unique(findgroups(survivalSorted.colonyID)));
+% survivalSorted.rank = (repmat(1:numAnts,1,colonies))';
 
 
 %%
@@ -76,7 +76,7 @@ for i = 1:8
             ylim_max = max(max(xyMatrix(:,2:2:2*numAnts)));
      end
      for j = 1:numAnts
-        antID = append(string(colonyID{i}), "_", antColor(j));
+        antID = append(string(colonyID{i}), "_", antColour(j));
         rgb = survival.rgb{survival.antID == antID};
         subplot(10,numAnts, (i-1)*numAnts+j); % make numFile*maxNumAnts grid plot
         x= xyMatrix(:,2*j-1);
