@@ -1,5 +1,5 @@
 clear
-rootDirPath = '/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/idol_cam10_com';
+rootDirPath = '/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/idol_cam11_com';
 numOfVideos = 288 ; %set the expected number of videos
 numOfAnts = 10;
 emptyMatrix = nan(6000, 4);
