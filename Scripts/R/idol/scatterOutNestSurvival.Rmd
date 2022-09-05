@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+survival <- read_csv("Data/fungiSurvival/survival.csv") 
+antTable <- read_csv("Data/fungiSurvival/outputAntTableCam9Cam10.csv")
+```
+
+```{r}
+left_join(antTable, survival,by = c("camera", "colonyCam", "colour")) %>% 
+  mutate(hrsSurvival = minutesSurvival/60, 
+         hrsSurvivalForRanking = minutesSurvivalForRanking/60,
+         antID = paste0(camera, "_", colonyCam, "_", colony, "_",colour)) %>% 
+  filter(!antID %in% c("cam9_3_3_BO")) %>% 
+  group_by(colony) %>% 
+  mutate(hrsSurvivalRank = percent_rank(hrsSurvivalForRanking),
+         outNestRatioRank = percent_rank(outNestRatio)) %>% 
+  ungroup -> antTableSurvival
+
+antTableSurvival %>% 
+  group_by(colony) %>% 
+  summarise(meanHrsSurvival = mean(hrsSurvival, na.rm = TRUE),
+            meanOutNestRatio = mean(outNestRatio, na.rm = TRUE)) -> colonyTableSurvival
+
+```
+
+
+```{r}
+antTableSurvival %>% 
+  ggplot(., aes(x = outNestRatio, y = hrsSurvival, colour = as.factor(colony))) + 
+  geom_point() 
+```
+
+
+```{r}
+antTableSurvival %>% 
+  ggplot(., aes(x = outNestRatioRank, y = hrsSurvivalRank, colour = as.factor(colony))) + 
+  geom_point() +
+  facet_wrap(~colony)
+
+antTableSurvival %>% 
+  ggplot(., aes(x = outNestRatioRank, y = hrsSurvivalRank, colour = as.factor(colony))) + 
+  geom_count()
+
+cor.test(antTableSurvival$outNestRatioRank, antTableSurvival$hrsSurvivalRank, method = "spearm", alternative = "g", exact = FALSE)
+```
+```{r}
+ggplot(colonyTableSurvival, aes(x = meanOutNestRatio, y = meanHrsSurvival)) + 
+  geom_point() 
+cor.test(colonyTableSurvival$meanOutNestRatio, colonyTableSurvival$meanHrsSurvival, method = "spearm", alternative = "g", exact = FALSE)
+
+```
+
+
+
