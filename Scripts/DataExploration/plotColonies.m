@@ -2,7 +2,7 @@
 clear;
 parameters.folderPath ='/Volumes/ulr-lab/Users/Zimai_zili7317/idol/results/all'; %Mac
 %parameters.folderPath = 'C:\Users\galciato\polybox\Laptop\Age_Analysis\DeadPruned'; %Windows
-parameters.numOfFiles = 8;
+parameters.numOfFiles = 10;
 parameters.firstFile = 1;
 parameters.numOfAnts = 10;
 antColour = ["BG","BO","GB","GP","OB","OG","OP","PB","PG","PO"];

@@ -1,0 +1,82 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(lme4)
+```
+
+```{r}
+survival <- read_csv("Data/fungiSurvival/survival.csv") 
+antTable <- read_csv("Data/fungiSurvival/antTable10Colonies.csv")
+```
+
+```{r}
+left_join(antTable, survival,by = c("camera", "colonyCam", "colony", "antColour"="colour")) %>% 
+  drop_na(minutesSurvivalForRanking) %>% 
+  mutate(hrsSurvival = minutesSurvival/60, 
+         hrsSurvivalForRanking = minutesSurvivalForRanking/60) %>% 
+  group_by(colony) %>% 
+  mutate(hrsSurvivalRank = min_rank(hrsSurvivalForRanking),
+         rmsdRank = min_rank(rmsd),
+         hrsSurvivalPercentRank = percent_rank(hrsSurvivalForRanking),
+         rmsdPercentRank = percent_rank(rmsd)) %>% 
+  ungroup -> antTableSurvival
+
+antTableSurvival %>% 
+  group_by(colony) %>% 
+  summarise(meanHrsSurvival = mean(hrsSurvivalForRanking, na.rm = TRUE),
+            meanRmsd = mean(rmsd, na.rm = TRUE),
+            sdHrsSurvival = sd(hrsSurvivalForRanking, na.rm = TRUE),
+            sdRmsd = sd(rmsd, na.rm = TRUE),) -> colonyTableSurvival
+```
+
+```{r absolute values}
+antTableSurvival %>% 
+  ggplot(., aes(x = rmsd, y = hrsSurvivalForRanking, colour = as.factor(colony))) + 
+  geom_point() 
+
+antTableSurvival$hrsSurvivalForRanking2 <- antTableSurvival$hrsSurvivalForRanking^2
+quadraticLmerAnt <- lmer(formula = log(rmsd) ~ hrsSurvivalForRanking + hrsSurvivalForRanking2  + (1|colony), data = antTableSurvival)
+drop1(quadraticLmerAnt, test="F")
+
+summary(quadraticLmerAnt)
+
+```
+
+```{r rank values}
+antTableSurvival %>% 
+  ggplot(., aes(x = rmsdPercentRank, y = hrsSurvivalPercentRank, colour = as.factor(colony))) + 
+  geom_point() +
+  facet_wrap(~as.factor(colony))
+
+cor.test(antTableSurvival$rmsdPercentRank, antTableSurvival$hrsSurvivalPercentRank, method = "spearm", exact = FALSE)
+
+antTableSurvival %>% 
+  ggplot(., aes(x = rmsdPercentRank, y = hrsSurvivalPercentRank)) + 
+  geom_count()
+```
+
+```{r colony}
+colonyTableSurvival %>% 
+  ggplot(., aes(x = sdRmsd, y = sdHrsSurvival, color = as.factor(colony))) + 
+  geom_point() 
+  
+cor.test(colonyTableSurvival$sdRmsd, colonyTableSurvival$sdHrsSurvival, exact = FALSE)
+
+colonyTableSurvival$sdRmsd2 <- colonyTableSurvival$sdRmsd^2
+quadraticLmSDs <- lm(formula = sdHrsSurvival ~ sdRmsd + sdRmsd2, data = colonyTableSurvival)
+summary(quadraticLmSDs)
+
+colonyTableSurvival %>% 
+  ggplot(., aes(x = meanRmsd, y = meanHrsSurvival, color = as.factor(colony))) + 
+  geom_point() 
+  
+cor.test(colonyTableSurvival$meanRmsd, colonyTableSurvival$meanHrsSurvival, exact = FALSE)
+
+
+```

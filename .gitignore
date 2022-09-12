@@ -10,6 +10,10 @@ Scripts/DataExploration/.Rhistory
 
 .DS_Store
 
+network/output2/temp/
+network/contactMats.mat
+*.mat
+network/generateTempNetTest.m
 Scripts/R/Nematode/.Rhistory
 
 .Rhistory
