@@ -42,7 +42,6 @@ for i = 1:parameters.numCam
             outputAntTable.outNestFrames(numRow) = sumOutNest((j-1)*parameters.numOfAnts +k);
             outputAntTable.totalFrames(numRow) = totalFrames((j-1)*parameters.numOfAnts +k);
             outputAntTable.outNestRatio(numRow) = outNestRatio((j-1)*parameters.numOfAnts +k);
-
         end
     end
 end
