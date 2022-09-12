@@ -1,13 +1,14 @@
 function contactsPerAnt = contactRoutesCalc(contactsMat)
 
-    numOfAnts = size(contactsMat{1}(:,:,1), 1);
-
+%     numOfAnts = size(contactsMat{1}(:,:,1), 1);
+    firstElement = contactsMat{find(cellfun(@(a) ~isnan(sum(a, 'all')), contactsMat), 1, 'first')};
+    numOfAnts = size(firstElement(:, :, 1), 1);
     %% Generate masking matrices
     % for working only on one copy of couples - the lower part of the
     % contactsMat.
     nansMatrix1 = triu(nan([numOfAnts, numOfAnts]), 0);                     % generate half matrix (diagonally divided) with upper half nans, and lower zeros
     nansMatrix1(nansMatrix1 == 0) = 1;                                      % change zeros to ones
-    nansMatrix = repmat(nansMatrix1, 1, 1, length(contactsMat{1}(1,1,:)));  % convert into 3d matrix with the same dimension as contactsMat
+    nansMatrix = repmat(nansMatrix1, 1, 1, length(firstElement(1,1,:)));  % convert into 3d matrix with the same dimension as contactsMat
 
     %% Generate keys
     % for connecting the contacts matrix to the ants.
