@@ -7,6 +7,8 @@ editor_options:
 
 ```{r}
 library(tidyverse)
+library(lme4)
+library(glmmTMB)
 ```
 
 ```{r}
@@ -21,12 +23,13 @@ left_join(antTable, survival,by = c("camera", "colonyCam", "colour")) %>%
          antID = paste0(camera, "_", colonyCam, "_", colony, "_",colour)) %>% 
   filter(!antID %in% c("cam9_3_3_BO")) %>% 
   group_by(colony) %>% 
-  mutate(hrsSurvivalRank = percent_rank(hrsSurvivalForRanking),
-         outNestRatioRank = percent_rank(outNestRatio)) %>% 
+  mutate(hrsSurvivalRank = min_rank(hrsSurvivalForRanking),
+         outNestRatioRank = min_rank(outNestRatio)) %>% 
   ungroup -> antTableSurvival
 
 antTableSurvival %>% 
   group_by(colony) %>% 
+  drop_na(hrsSurvival, outNestRatio) %>% 
   summarise(meanHrsSurvival = mean(hrsSurvival, na.rm = TRUE),
             meanOutNestRatio = mean(outNestRatio, na.rm = TRUE)) -> colonyTableSurvival
 
@@ -37,25 +40,37 @@ antTableSurvival %>%
 antTableSurvival %>% 
   ggplot(., aes(x = outNestRatio, y = hrsSurvival, colour = as.factor(colony))) + 
   geom_point() 
+
+ggsave("Results/idol/scatterInNestRatio2Survival.pdf")
+
 ```
 
 
 ```{r}
 antTableSurvival %>% 
   ggplot(., aes(x = outNestRatioRank, y = hrsSurvivalRank, colour = as.factor(colony))) + 
-  geom_point() +
+  geom_() +
   facet_wrap(~colony)
 
 antTableSurvival %>% 
-  ggplot(., aes(x = outNestRatioRank, y = hrsSurvivalRank, colour = as.factor(colony))) + 
-  geom_count()
+  ggplot(., aes(x = outNestRatioRank, y = hrsSurvivalRank)) + 
+  geom_count() +
+  theme_minimal()
 
-cor.test(antTableSurvival$outNestRatioRank, antTableSurvival$hrsSurvivalRank, method = "spearm", alternative = "g", exact = FALSE)
+ggsave("Results/idol/scatterRank2Rank.pdf")
+
+cor.test(antTableSurvival$outNestRatioRank, antTableSurvival$hrsSurvivalRank, method = "pearson", exact = FALSE)
+
+glmer <- glmmTMB::glmmTMB(data = antTableSurvival, hrsSurvival ~ outNestRatio + (1|colony))
+summary(glmer)
+
 ```
 ```{r}
 ggplot(colonyTableSurvival, aes(x = meanOutNestRatio, y = meanHrsSurvival)) + 
   geom_point() 
+
 cor.test(colonyTableSurvival$meanOutNestRatio, colonyTableSurvival$meanHrsSurvival, method = "spearm", alternative = "g", exact = FALSE)
+
 
 ```
 
