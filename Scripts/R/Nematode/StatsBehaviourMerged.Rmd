@@ -74,6 +74,9 @@ simulationOutput <- simulateResiduals(fittedModel = glmmTMBBeta, plot = F)
 plot(simulationOutput)
 
 # Post hoc analysis
+drop1(glmmTMBBeta, scale = 0,test = "Chisq" )
+emmeans(glmmTMBBeta, pairwise~TreatmentInfectionStatus, type = "response")
+        
 posthoc_glmmTMBBeta <- glht(glmmTMBBeta, linfct = mcp(TreatmentInfectionStatus = "Tukey")) 
 summary(posthoc_glmmTMBBeta)
 par(mar = c(4, 20, 2, 2))
