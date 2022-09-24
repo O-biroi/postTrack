@@ -12,7 +12,7 @@ tic
 [distancesMat] = distancesClac(xy, inNest, parameters.withNest);
 toc
 
-disp('contactsCalc');
+disp('contactsCalc');w
 tic
 contactsMat = contactsCalc(distancesMat, parameters.contactThresh);
 toc
