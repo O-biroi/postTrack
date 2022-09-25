@@ -18,16 +18,16 @@ inputs;
 
 %% Network metrics
 [inNest] = buildEmptyInNest(parameters.numOfFiles, parameters.numOfAnts, parameters.lastframe);
-%%
-[distancesMat]= calDistance(xy, inNest, 0);
+[distancesMat] = calDistance(xy, inNest, 0);
+[contactsMat] = calContacts(distancesMat, 0.0005);
+[network] = calNetwork(contactsMat);
+[degreeCentrality] = calCentrality(network, "degree");
 
 %% Fill the antTable
 % add metrics to table
 [antTable] = addTableColumns(antTable, assignmentRate, "assignmentRate");
 [antTable] = addTableColumns(antTable, rmsd, "rmsd");
-[contactsMat] = calContacts(distancesMat, 0.001);
-
-%%
+[antTable] = addTableColumns(antTable, degreeCentrality, "degreeCentrality");
 
 %% Save Ant Table
 [filename, pathname] = uiputfile('*.csv');
